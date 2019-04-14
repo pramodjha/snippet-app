@@ -2,6 +2,9 @@ from django.conf.urls import include,url
 from . import views
 
 urlpatterns = [
+	url(r'^signin/', views.signin, name='signin'),
+	url(r'^signup/', views.signup, name='signup'),
+	url(r'^signout/', views.signout, name='signout'),
 	url(r'^home/', views.home, name='home'),
 	url(r'^about/', views.about, name='about'),
 	url(r'^learn/', views.learn, name='learn'),

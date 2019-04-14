@@ -1,5 +1,4 @@
 <nav id="colorlib-main-menu" role="navigation">
-
   <ul>
     <li {% if activetab == 'home' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'home' %}">Home</a></li>
     <li {% if activetab == 'about' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'about' %}">About</a></li>
@@ -7,5 +6,16 @@
     <li {% if activetab == 'learn' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'learn' %}">Learn</a></li>
     <li {% if activetab == 'blog' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'blog' %}">BLog</a></li>
     <li{% if activetab == 'contact' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'contact' %}">Contact</a></li>
-  </ul>
+    {% if user.is_authenticated %}
+    <li{% if activetab == 'signout' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'signout' %}">Sign-Out</a></li>
+    {% else %}
+    <li{% if activetab == 'signin' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'signin' %}">Sign-in</a></li>
+    <li{% if activetab == 'signup' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'signup' %}">Sign-up</a></li>
+    {% endif %}
+    {% if user.is_superuser %}
+    <li{% if activetab == 'admin' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'admin:index' %}">Admin</a></li>
+    {% endif %}
+
+</ul>
+
 </nav>

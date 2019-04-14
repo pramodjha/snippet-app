@@ -17,6 +17,8 @@
 											<h2 class="colorlib-heading"><a  href="{% url url|add:redirect_url1 %}"> {{redirect_url1}}</a>/<a  href="{% url url|add:redirect_url2  %}">{{action}}</a></h2>
 											{% elif condition == 2 %}
 											<h2 class="colorlib-heading"><a  href="{% url url|add:redirect_url1 %}"> {{redirect_url1}}</a>/<a href="{% url url|add:redirect_url2 id %}">{{model1}}</a>/<a  href="{% url url|add:redirect_url2  id %}">{{action}}</a></h2>
+											{% elif condition == 3 %}
+											<h2 class="colorlib-heading"><a  href="{% url url|add:redirect_url1 %}"> {{action}}</a></h2>
 											{% else %}
 											<h2 class="colorlib-heading"><a  href="{% url url|add:redirect_url1 %}"> {{redirect_url1}}</a>/<a href="{% url url|add:redirect_url2 id %}">{{model1}}</a>/<a  href="{% url url|add:redirect_url3 id %}">{{action}}</a></h2>
 											{% endif %}
@@ -28,8 +30,11 @@
 								          {% endfor %}
 								          {% for field in form.visible_fields %}
 								            <div class="form-group">
-								              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-								              {{ field|add_class:'form-control' }}
+															{% if  field.label ==  "Publish" %}
+														  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+															{% else %}
+															{% endif %}
+															{{ field|add_class:'form-control' }}
 								              {% for error in field.errors %}
 								                <span class="help-block">{{ error }}</span>
 								              {% endfor %}

@@ -3,10 +3,12 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
 import sys
-from .form import TblAboutForm, TblSnippetTopicsForm, TblSnippetDataForm ,TblBlogForm,TblBlogCommentsForm, TblLearnDataCommentsForm, TblBlogGvpForm,TblLearnDataGvpForm,TblHomeForm,TblAboutForm, TblLearnDataForm
+from .form import TblAboutForm, TblSnippetTopicsForm, TblSnippetDataForm ,TblBlogForm,TblBlogCommentsForm, TblLearnDataCommentsForm, TblBlogGvpForm,TblLearnDataGvpForm,TblHomeForm,TblAboutForm, TblLearnDataForm, UsersigninForm, UserRegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .filters import SnippetFilter, LearnFilter, BlogFilter
+from django.contrib.auth import authenticate, login, logout
+
 # Create your views here.
 
 def template_generator(template_folder='myapp',function_name=None,file_extention='.html'):
@@ -17,6 +19,69 @@ def template_generator(template_folder='myapp',function_name=None,file_extention
 def get_function_name():
     function_name = sys._getframe(1).f_code.co_name
     return function_name
+
+def signin(request):
+    template = 'myapp/dynamic_form.html'
+    activetab = 'signin'
+    redirect_url1 = 'signin'
+    action = 'Enter your Credential'
+    condition = 3
+    form = UsersigninForm()
+    if request.method == 'POST':
+        form =  UsersigninForm(request.POST)
+        if form.is_valid():
+            userObj = form.cleaned_data
+            username =  userObj['username']
+            password =  userObj['password']
+            if (User.objects.filter(username=username).exists()):
+                user = User.objects.get(username = username)
+                user = authenticate(username = username, password = password)
+                if user is not None:
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('home'))
+    context = {'form' : form,'activetab':activetab,'redirect_url1':redirect_url1,'action':action,'condition':condition}
+    return render(request, template,context)
+
+
+def signup(request):
+    template = 'myapp/dynamic_form.html'
+    activetab = 'signup'
+    redirect_url1 = 'signup'
+    action = 'Create Account'
+    condition = 3
+    form = UserRegistrationForm()
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            userObj = form.cleaned_data
+            username =  userObj['username']
+            email =  userObj['email']
+            password =  userObj['password']
+            passwordagain =  userObj['passwordagain']
+            firstname =  userObj['firstname']
+            lastname =  userObj['lastname']
+            if password == passwordagain:
+                if not (User.objects.filter(username=username).exists()):
+                    new_user = User.objects.create_user(username, email, password)
+                    new_user.is_active = True
+                    new_user.first_name = firstname
+                    new_user.last_name = lastname
+                    new_user.save()
+                    try:
+                        user = authenticate(username = username, password = password)
+                        login(request, user)
+                        return HttpResponseRedirect(reverse('home'))
+                    except:
+                        return HttpResponseRedirect(reverse('home'))
+    context = {'form' : form,'activetab':activetab,'redirect_url1':redirect_url1,'action':action,'condition':condition}
+    return render(request, template,context)
+
+
+def signout(request):
+    request.session.delete()
+    logout(request)
+    return HttpResponseRedirect(reverse('signin'))
+
 
 def home(request):
     function_name = get_function_name()

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 {% extends "basetemplate.html" %}
+{% load staticfiles %}
 
 {% block navblock %}
 {% include "navbar.html" %}
@@ -11,15 +12,24 @@
 				<div class="colorlib-narrow-content">
 					<div class="row">
 						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
+							{{perms.tbl_blog.myapp.add_tblblog }}
+						{% if perms.tbl_blog.myapp.add_tblblog  %}
+
 						<span class="heading-meta"><a  href="{% url 'blogaddform' %}">Add</a></span>
+						{% endif %}
 						<h2 class="colorlib-heading">Read Blog</h2>
 						</div>
 					</div>
 					<div class="row">
 						{% for data in model %}
+
 						<div class="col-md-4 col-sm-6 animate-box" data-animate-effect="fadeInLeft">
 							<div class="blog-entry">
-								<a href="blog.html" class="blog-img"><img src="images/blog-1.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
+								{% if data.blog_pics %}
+								<a href="blog.html" class="blog-img"><img src="/media/{{data.blog_pics}}" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
+							{% else %}
+								<a href="blog.html" class="blog-img"><img src="/media/blog/default.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
+								{% endif %}
 								<div class="desc">
 									<span><small>{{data.blog_datetime|safe}}</small> | <small> Like</a></small> </span>
 									<h3><a href="{% url 'blogtopics' data.blog_id %}">{{data.blog_title|safe}}</a></h3>

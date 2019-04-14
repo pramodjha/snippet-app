@@ -3,6 +3,8 @@ import datetime
 from django.contrib.auth.models import User
 from tinymce import HTMLField
 import django
+
+
 class TblBlog(models.Model):
     blog_id = models.AutoField(primary_key=True)
     blog_datetime = models.DateTimeField(default= django.utils.timezone.now)

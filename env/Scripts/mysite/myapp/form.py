@@ -2,6 +2,18 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import TblPublish , TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments,TblLearnDataComments, TblBlogGvp, TblLearnDataGvp,TblSnippetDataGvp, TblHome, TblAbout
 
+class UsersigninForm(forms.Form):
+    username = forms.CharField(required = True, label = 'Username', max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    password = forms.CharField(required = True, label = 'Password', max_length = 32, widget = forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+class UserRegistrationForm(forms.Form):
+    username = forms.CharField(required = True, min_length=6,label = 'Username', max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Username'}) )
+    email = forms.EmailField(required = True, label = 'Email', max_length = 100, widget=forms.EmailInput(attrs={'placeholder': 'e.g. : email@gmail.com'}))
+    firstname = forms.CharField(required = True, label = 'First Name', max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
+    lastname = forms.CharField(required = True, label = 'Last Name', max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
+    password = forms.CharField(required = True, label = 'Password', max_length = 100, widget = forms.PasswordInput(attrs={'placeholder': 'Password'}))
+    passwordagain = forms.CharField(required = True, label = 'Password (Again)', max_length = 100, widget = forms.PasswordInput(attrs={'placeholder': 'Password (Again)'}))
+
 class TblPublishForm(forms.ModelForm):
     class Meta():
         model = TblPublish
@@ -26,16 +38,17 @@ class TblSnippetDataForm(forms.ModelForm):
         self.fields['snippet_data_datetime'].widget = forms.HiddenInput()
         self.fields['snippet_data_added_by'].widget = forms.HiddenInput()
         self.fields['snippet_topics'].widget = forms.HiddenInput()
-        self.fields['snippet_data_subject'].label = "Title/Topics"
-        self.fields['snippet_data_description'].label = "Brief Description"
-        self.fields['snippet_data_keyword'].label = "Keyword For Search"
-        self.fields['snippet_data_code'].label = "Snippet (Code)"
-        self.fields['snippet_data_publish'].label = "Ready-To-Publish"
+        self.fields['snippet_data_subject'].widget.attrs['placeholder'] = "Title/Topics"
+        self.fields['snippet_data_description'].widget.attrs['placeholder'] = "Brief Description"
+        self.fields['snippet_data_keyword'].widget.attrs['placeholder'] ="Keyword For Search"
+        self.fields['snippet_data_code'].widget.attrs['placeholder'] = "Snippet (Code)"
+        self.fields['snippet_data_publish'].widget.attrs['placeholder'] = "Ready-To-Publish"
+        self.fields['snippet_data_publish'].label = "Publish"
 
 class TblBlogForm(forms.ModelForm):
     class Meta():
         model = TblBlog
-        fields = ['blog_pics','blog_title','blog_description','blog_content','blog_keyword','blog_publish','blog_datetime','blog_summary','blog_like','blog_added_by']
+        fields = ['blog_title','blog_description','blog_keyword','blog_content','blog_pics','blog_publish','blog_datetime','blog_summary','blog_like','blog_added_by']
 
     def __init__(self, *args, **kwargs):
         super(TblBlogForm, self).__init__(*args, **kwargs)
@@ -43,12 +56,12 @@ class TblBlogForm(forms.ModelForm):
         self.fields['blog_summary'].widget = forms.HiddenInput()
         self.fields['blog_like'].widget = forms.HiddenInput()
         self.fields['blog_added_by'].widget = forms.HiddenInput()
-        self.fields['blog_title'].label = "Title/Topics"
-        self.fields['blog_description'].label = "Brief Description"
-        self.fields['blog_content'].label = "Blog Content"
-        self.fields['blog_keyword'].label = "Keyword For Search"
-        self.fields['blog_publish'].label = "Ready-To-Publish"
-        self.fields['blog_pics'].label = "Upload Pics"
+        self.fields['blog_title'].widget.attrs['placeholder'] = "Title/Topics"
+        self.fields['blog_description'].widget.attrs['placeholder'] = "Brief Description"
+        self.fields['blog_content'].widget.attrs['placeholder'] = "Blog Content"
+        self.fields['blog_keyword'].widget.attrs['placeholder'] = "Keyword For Search"
+        self.fields['blog_pics'].widget.attrs['placeholder'] = "Upload Pics"
+        self.fields['blog_publish'].label = "Publish"
 
 
 
@@ -60,7 +73,7 @@ class TblBlogCommentsForm(forms.ModelForm):
 class TblLearnDataForm(forms.ModelForm):
     class Meta():
         model = TblLearnData
-        fields = ['learn_data','learn_data_description','learn_data_keyword','learn_data_publish','learn_data_datetime','learn_data_added_by','learn_topics','learn_data_like','learn_data_icon']
+        fields = ['learn_data','learn_data_keyword','learn_data_description','learn_data_publish','learn_data_datetime','learn_data_added_by','learn_topics','learn_data_like','learn_data_icon']
 
     def __init__(self, *args, **kwargs):
         super(TblLearnDataForm, self).__init__(*args, **kwargs)
@@ -69,15 +82,16 @@ class TblLearnDataForm(forms.ModelForm):
         self.fields['learn_topics'].widget = forms.HiddenInput()
         self.fields['learn_data_like'].widget = forms.HiddenInput()
         self.fields['learn_data_icon'].widget = forms.HiddenInput()
-        self.fields['learn_data'].label = "Title/Topics"
-        self.fields['learn_data_description'].label = "Brief Description"
-        self.fields['learn_data_keyword'].label = "Keyword For Search"
-        self.fields['learn_data_publish'].label = "Ready-To-Publish"
+        self.fields['learn_data'].widget.attrs['placeholder'] = "Title/Topics"
+        self.fields['learn_data_description'].widget.attrs['placeholder'] = "Brief Description"
+        self.fields['learn_data_keyword'].widget.attrs['placeholder'] = "Keyword For Search"
+        self.fields['learn_data_publish'].label = "Publish"
 
 class TblLearnDataCommentsForm(forms.ModelForm):
     class Meta():
         model = TblLearnDataComments
         fields = '__all__'
+
 class TblBlogGvpForm(forms.ModelForm):
     class Meta():
         model = TblBlogGvp
