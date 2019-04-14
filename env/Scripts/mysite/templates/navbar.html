@@ -1,0 +1,11 @@
+<nav id="colorlib-main-menu" role="navigation">
+
+  <ul>
+    <li {% if activetab == 'home' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'home' %}">Home</a></li>
+    <li {% if activetab == 'about' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'about' %}">About</a></li>
+    <li {% if activetab == 'snippet' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'snippet' %}">Snippet</a></li>
+    <li {% if activetab == 'learn' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'learn' %}">Learn</a></li>
+    <li {% if activetab == 'blog' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'blog' %}">BLog</a></li>
+    <li{% if activetab == 'contact' %} class="colorlib-active" {%else%} {% endif %}><a href="{% url 'contact' %}">Contact</a></li>
+  </ul>
+</nav>

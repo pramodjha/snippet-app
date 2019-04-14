@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+{% extends "basetemplate.html" %}
+{% load bootstrap3 %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block navblock %}
+{% include "navbar.html" %}
+{% endblock %}
+
+{% block content %}
+		<div id="colorlib-main">
+			<div class="colorlib-work">
+				<div class="colorlib-narrow-content">
+					<div class="row">
+						<div class="col-md-12 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
+							<span class="heading-meta"><a  href="{% url 'blogeditform' id %}">{{heading}}</a></span>
+						<div class="col-md-5  animate-box" data-animate-effect="fadeInLeft">
+							{% for data1 in model1 %}
+							<h2 class="colorlib-heading"><a  href="{% url 'blog' %}">Blog</a>/<a  href="{% url 'blogtopics' data1.blog_id %}">{{data1.blog_title}}</a> </h2>
+							{% endfor %}
+						</div>
+						<div class="col-md-7  animate-box" data-animate-effect="fadeInLeft">
+							<form method="get">
+								<span class="col-md-5">
+									{{ filter.form.blog_keyword|add_class:'form-control' }}
+								</span>
+								<span class="col-md-2">
+								{% buttons %}<button type="submit" class="btn btn-success">Submit</button>{% endbuttons %}
+								</span>
+							</div>
+						</div>
+							</form>
+						</div>
+
+					{% for data in filter.qs %}
+					<div class="row ">
+						<div class="col-md-12">
+						 <div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
+					 		</div>
+								<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
+					 				<div class=" col-md-12 animate-box" data-animate-effect="fadeInLeft">
+										{{data.blog_title|safe}}
+									</div>
+									<div class=" col-md-12 animate-box" data-animate-effect="fadeInLeft">
+										{{data.blog_content|safe}}
+									</div>
+
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endblock %}

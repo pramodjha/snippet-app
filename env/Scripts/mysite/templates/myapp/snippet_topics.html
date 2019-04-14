@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+{% extends "basetemplate.html" %}
+{% load bootstrap3 %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block navblock %}
+{% include "navbar.html" %}
+{% endblock %}
+
+{% block content %}
+		<div id="colorlib-main">
+			<div class="colorlib-work">
+				<div class="colorlib-narrow-content">
+					<div class="row">
+						<div class="col-xs-12 col-md-12 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
+						<div class="col-xs-12 col-md-5  animate-box" data-animate-effect="fadeInLeft">
+							{% for data1 in model1 %}
+							<span class="heading-meta"><a  href="{% url 'snippetaddform' data1.snippet_topics_id %}">Add</a>
+							<h2 class="colorlib-heading"><a  href="{% url 'snippet' %}"> Snippet</a>/<a  href="{% url 'snippettopics' data1.snippet_topics_id %}">{{data1.snippet_topics}}</a> </h2>
+							{% endfor %}
+						</div>
+						<div class="col-xs-12 col-md-7  animate-box" data-animate-effect="fadeInLeft">
+							<form method="get">
+								<span class="col-xs-8 col-md-5">
+									{{ filter.form.snippet_data_keyword|add_class:'form-control' }}
+								</span>
+								<span class="col-xs-4 col-md-2">
+								{% buttons %}<button type="submit" class="btn btn-success"> Submit</button>{% endbuttons %}
+								</span>
+							</div>
+						</div>
+							</form>
+						</div>
+					{% for data in filter.qs %}
+					<div class="row " >
+						{% if not forloop.counter|divisibleby:2 %}
+						<div class="col-xs-12 col-md-8 background1">
+						{% else %}
+						<div class="col-xs-12 col-md-8 background2">
+						{% endif %}
+						 <div class="col-xs-12 col-md-8 animate-box"   data-animate-effect="fadeInLeft">
+							<div class="col-xs-12 col-md-12 animate-box" data-animate-effect="fadeInLeft">
+						 <span class="fontsytle1">{{data.snippet_data_subject|safe}}</span>
+					 </div>
+							</div>
+								<div class="col-xs-12 col-md-8 animate-box" data-animate-effect="fadeInLeft">
+									<div class="col-xs-12 col-md-12 animate-box " data-animate-effect="fadeInLeft">
+										<span style="font-weight:bold" >Description:</span> {{data.snippet_data_description|safe}}
+									</div>
+					 				<div class="col-xs-12 col-md-12 animate-box" data-animate-effect="fadeInLeft">
+										<span style="font-weight:bold" >Code:</span>  {{data.snippet_data_code|safe}}
+									</div>
+									<div class="col-xs-12 col-md-12 animate-box" data-animate-effect="fadeInLeft">
+										<a href="{% url 'snippeteditform' data.snippet_data_id %}">Edit</a>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% endblock %}

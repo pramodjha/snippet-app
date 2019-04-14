@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+{% extends "basetemplate.html" %}
+{% load staticfiles %}
+
+{% block navblock %}
+{% include "navbar.html" %}
+{% endblock %}
+
+{% block content %}
+		<div id="colorlib-main">
+			<div class="colorlib-work">
+				<div class="colorlib-narrow-content">
+					<div class="row">
+						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
+							<span class="heading-meta">Learn</span>
+							<h2 class="colorlib-heading">Get usefull code for:</h2>
+						</div>
+					</div>
+					<div class="row row-bottom-padded-md">
+					{% for data in model %}
+					 <div class="col-md-4 row-bottom-padded-md">
+					 	<div class="animate-box" data-animate-effect="fadeInLeft">
+							<div class="project frame">
+								<div class="vertical">
+									<div class="horizontal">
+								<h1 class="fontsytle"> {{data.learn_topics}} <h1>
+									</div>
+								</div>
+								</div>
+						</div>
+					</div>
+					{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+	{% endblock %}

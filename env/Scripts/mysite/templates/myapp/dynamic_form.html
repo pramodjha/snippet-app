@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+{% extends "basetemplate.html" %}
+{% load bootstrap3 %}
+{% load widget_tweaks %}
+
+{% block navblock %}
+{% include "navbar.html" %}
+{% endblock %}
+
+{% block content %}
+		<div id="colorlib-main">
+			<div class="colorlib-about">
+				<div class="colorlib-narrow-content">
+									<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
+										<div class="about-desc">
+											{% if condition == 1 %}
+											<h2 class="colorlib-heading"><a  href="{% url url|add:redirect_url1 %}"> {{redirect_url1}}</a>/<a  href="{% url url|add:redirect_url2  %}">{{action}}</a></h2>
+											{% elif condition == 2 %}
+											<h2 class="colorlib-heading"><a  href="{% url url|add:redirect_url1 %}"> {{redirect_url1}}</a>/<a href="{% url url|add:redirect_url2 id %}">{{model1}}</a>/<a  href="{% url url|add:redirect_url2  id %}">{{action}}</a></h2>
+											{% else %}
+											<h2 class="colorlib-heading"><a  href="{% url url|add:redirect_url1 %}"> {{redirect_url1}}</a>/<a href="{% url url|add:redirect_url2 id %}">{{model1}}</a>/<a  href="{% url url|add:redirect_url3 id %}">{{action}}</a></h2>
+											{% endif %}
+											<form class="form" id="dynamic_form" method="POST" action=""  enctype="multipart/form-data" >
+												{% csrf_token %}
+													{{form.media}}
+													{% for hidden in form.hidden_fields %}
+								            {{ hidden }}
+								          {% endfor %}
+								          {% for field in form.visible_fields %}
+								            <div class="form-group">
+								              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+								              {{ field|add_class:'form-control' }}
+								              {% for error in field.errors %}
+								                <span class="help-block">{{ error }}</span>
+								              {% endfor %}
+								            </div>
+								          {% endfor %}
+								      	<div class="modal-footer">
+								        <div>{% buttons %}<button type="submit" class="btn btn-success"> Submit</button>{% endbuttons %}</div>
+												<div><a href="{% url url|add:redirect_url1 %}" id="cancel" name="cancel" class="btn btn-danger">Cancel</a></div>
+											</div>
+										</form>
+									</div>
+									</div>
+								</div>
+						</div>
+	{% endblock %}

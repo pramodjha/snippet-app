@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+{% extends "basetemplate.html" %}
+{% load bootstrap3 %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+{% block navblock %}
+{% include "navbar.html" %}
+{% endblock %}
+
+{% block content %}
+		<div id="colorlib-main">
+			<div class="colorlib-work">
+				<div class="colorlib-narrow-content">
+					<div class="row">
+						<div class="col-md-12 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
+						<div class="col-md-5  animate-box" data-animate-effect="fadeInLeft">
+							{% for data1 in model1 %}
+							<span class="heading-meta"><a  href="{% url 'learnaddform' data1.learn_topics_id %}">Add</a>
+							<h2 class="colorlib-heading"><a  href="{% url 'learn' %}">Learn</a>/<a  href="{% url 'learntopics' data1.learn_topics_id %}">{{data1.learn_topics}}</a> </h2>
+							{% endfor %}
+						</div>
+						<div class="col-md-7  animate-box" data-animate-effect="fadeInLeft">
+							<form method="get">
+								<span class="col-md-5">
+									{{ filter.form.learn_data_keyword|add_class:'form-control' }}
+								</span>
+								<span class="col-md-2">
+								{% buttons %}<button type="submit" class="btn btn-success">Submit</button>{% endbuttons %}
+								</span>
+							</div>
+						</div>
+							</form>
+						</div>
+
+					{% for data in filter.qs %}
+					<div class="row ">
+						<div class="col-md-12">
+						 <div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
+					 		 <a  href="{% url 'learneditform' data.learn_data_id %}">Edit</a> : {{data.learn_data_subject|safe}}
+					 		</div>
+								<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
+					 				<div class=" col-md-12 animate-box" data-animate-effect="fadeInLeft">
+										{{data.learn_data|safe}}
+									</div>
+									<div class=" col-md-12 animate-box" data-animate-effect="fadeInLeft">
+										{{data.learn_data_description|safe}}
+									</div>
+
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endblock %}
