@@ -19,10 +19,6 @@ class TblPublishForm(forms.ModelForm):
         model = TblPublish
         fields = '__all__'
 
-class TblSnippetTopicsForm(forms.ModelForm):
-    class Meta():
-        model = TblSnippetTopics
-        fields = '__all__'
 
 class TblSnippetDataForm(forms.ModelForm):
     class Meta():
@@ -104,15 +100,45 @@ class TblHomeForm(forms.ModelForm):
     class Meta():
         model = TblHome
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(TblHomeForm, self).__init__(*args, **kwargs)
+        self.fields['home_datetime'].widget = forms.HiddenInput()
+        self.fields['home_added_by'].widget = forms.HiddenInput()
+        self.fields['home_pics'].widget.attrs['placeholder'] = "Upload Image"
+        self.fields['home_content'].widget.attrs['placeholder'] = "Content"
+        self.fields['home_content_description'].widget.attrs['placeholder'] = "Description"
+        self.fields['home_publish'].label = "Publish"
+
+
 class TblAboutForm(forms.ModelForm):
     class Meta():
         model = TblAbout
         fields = '__all__'
+    def __init__(self, *args, **kwargs):
+        super(TblAboutForm, self).__init__(*args, **kwargs)
+        self.fields['about_datetime'].widget = forms.HiddenInput()
+        self.fields['about_added_by'].widget = forms.HiddenInput()
+        self.fields['about_pics'].widget.attrs['placeholder'] = "Upload Image"
+        self.fields['about_content'].widget.attrs['placeholder'] = "Content"
+        self.fields['about_content_description'].widget.attrs['placeholder'] = "Description"
+        self.fields['about_publish'].label = "Publish"
 
 class TblLearnTopicsForm(forms.ModelForm):
     class Meta():
         model = TblLearnTopics
         fields = '__all__'
+    def __init__(self, *args, **kwargs):
+        super(TblLearnTopicsForm, self).__init__(*args, **kwargs)
+        self.fields['learn_topics_datetime'].widget = forms.HiddenInput()
+        self.fields['learn_topics_added_by'].widget = forms.HiddenInput()
+        self.fields['learn_topics_icon'].widget = forms.HiddenInput()
+        self.fields['learn_topics_coverpage_img'].widget = forms.HiddenInput()
+        self.fields['learn_topics'].widget.attrs['placeholder'] = "Topics"
+        self.fields['learn_topics_description'].widget.attrs['placeholder']  = "Description"
+        self.fields['learn_topics_publish'].label = "Publish"
+
+
 
     def clean_learn_topics_added_by(self):
         if not self.cleaned_data['learn_topics_added_by']:
@@ -123,6 +149,16 @@ class TblSnippetTopicsForm(forms.ModelForm):
     class Meta():
         model = TblSnippetTopics
         fields = '__all__'
+    def __init__(self, *args, **kwargs):
+        super(TblSnippetTopicsForm, self).__init__(*args, **kwargs)
+        self.fields['snippet_topics_datetime'].widget = forms.HiddenInput()
+        self.fields['snippet_topics_added_by'].widget = forms.HiddenInput()
+        self.fields['snippet_topics_icon'].widget = forms.HiddenInput()
+        self.fields['snippet_topics_coverpage_img'].widget = forms.HiddenInput()
+        self.fields['snippet_topics_expire'].widget = forms.HiddenInput()
+        self.fields['snippet_topics'].widget.attrs['placeholder'] = "Topics"
+        self.fields['snippet_topics_description'].widget.attrs['placeholder']  = "Description"
+        self.fields['snippet_topics_publish'].label = "Publish"
 
     def clean_snippet_topics_added_by(self):
         if not self.cleaned_data['snippet_topics_added_by']:

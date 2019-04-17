@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
 import sys
-from .form import TblAboutForm, TblSnippetTopicsForm, TblSnippetDataForm ,TblBlogForm,TblBlogCommentsForm, TblLearnDataCommentsForm, TblBlogGvpForm,TblLearnDataGvpForm,TblHomeForm,TblAboutForm, TblLearnDataForm, UsersigninForm, UserRegistrationForm
+from .form import TblAboutForm, TblSnippetTopicsForm, TblSnippetDataForm ,TblBlogForm,TblBlogCommentsForm, TblLearnDataCommentsForm, TblBlogGvpForm,TblLearnDataGvpForm,TblHomeForm,TblAboutForm, TblLearnDataForm, UsersigninForm, UserRegistrationForm, TblLearnTopicsForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .filters import SnippetFilter, LearnFilter, BlogFilter
@@ -190,6 +190,47 @@ def snippet(request):
     context = {'activetab':activetab,'model':model}
     return render(request, template,context)
 
+@login_required
+def snippet_add_form(request):
+    userid = User.objects.get(username=request.user).id
+    template = 'myapp/dynamic_form.html'
+    activetab = 'snippet'
+    action = 'Add'
+    redirect_url1 = 'snippet'
+    redirect_url2 = 'snippetaddform'
+    condition = 1
+    form = TblSnippetTopicsForm(initial={'snippet_topics_added_by':userid})
+    if request.method == 'POST':
+        form = TblSnippetTopicsForm(request.POST)
+        if form.is_valid():
+            inst = form.save(commit=True)
+            inst.save()
+            return HttpResponseRedirect(reverse(redirect_url1))
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
+    return render(request, template,context)
+
+@login_required
+def snippet_edit_form(request,snippet_id):
+    template = 'myapp/dynamic_form.html'
+    e = TblSnippetTopics.objects.get(snippet_id=snippet_id)
+    aboutid = TblSnippetTopics.objects.get(snippet_id=snippet_id).snippet_id
+    model1 = TblSnippetTopics.objects.get(snippet_id__in=[snippet_id]).snippet_topics
+    userid = User.objects.get(username=request.user).id
+    condition = 2
+    activetab = 'snippet'
+    action = 'Edit'
+    redirect_url1 = 'snippet'
+    redirect_url2 = 'snippeteditform'
+    form = TblSnippetTopicsForm(instance=e)
+    if request.method == 'POST':
+        form = TblSnippetTopicsForm(request.POST,instance=e)
+        if form.is_valid():
+            inst = form.save(commit=True)
+            inst.save()
+            return HttpResponseRedirect(reverse(redirect_url1))
+    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
+    return render(request, template,context)
+
 def snippet_topics(request,snippet_topics_id):
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
@@ -204,7 +245,7 @@ def snippet_topics(request,snippet_topics_id):
 
 
 @login_required
-def snippet_add_form(request,snippet_topics_id):
+def snippet_topics_add_form(request,snippet_topics_id):
     template = 'myapp/dynamic_form.html'
     model = TblSnippetData.objects.filter(snippet_data_publish__in=[2]).filter(snippet_topics__in=[snippet_topics_id])
     model1 = TblSnippetTopics.objects.get(snippet_topics_id__in=[snippet_topics_id]).snippet_topics
@@ -213,7 +254,7 @@ def snippet_add_form(request,snippet_topics_id):
     action = 'Add'
     redirect_url1 = 'snippet'
     redirect_url2 = 'snippettopics'
-    redirect_url3 = 'snippetaddform'
+    redirect_url3 = 'snippettopicsaddform'
     form = TblSnippetDataForm(initial={'snippet_topics':snippet_topics_id,'snippet_data_added_by':userid})
     if request.method == 'POST':
         form = TblSnippetDataForm(request.POST)
@@ -225,7 +266,7 @@ def snippet_add_form(request,snippet_topics_id):
     return render(request, template,context)
 
 @login_required
-def snippet_edit_form(request,snippet_data_id):
+def snippet_topics_edit_form(request,snippet_data_id):
     template = 'myapp/dynamic_form.html'
     e = TblSnippetData.objects.get(snippet_data_id=snippet_data_id)
     topicid = TblSnippetData.objects.get(snippet_data_id=snippet_data_id).snippet_topics_id
@@ -235,7 +276,7 @@ def snippet_edit_form(request,snippet_data_id):
     action = 'Edit'
     redirect_url1 = 'snippet'
     redirect_url2 = 'snippettopics'
-    redirect_url3 = 'snippeteditform'
+    redirect_url3 = 'snippettopicseditform'
     form = TblSnippetDataForm(instance=e)
     if request.method == 'POST':
         form = TblSnippetDataForm(request.POST,instance=e)
@@ -253,6 +294,49 @@ def learn(request):
     context = {'activetab':activetab,'model':model}
     return render(request, template,context)
 
+
+@login_required
+def learn_add_form(request):
+    userid = User.objects.get(username=request.user).id
+    template = 'myapp/dynamic_form.html'
+    activetab = 'learn'
+    action = 'Add'
+    redirect_url1 = 'learn'
+    redirect_url2 = 'learnaddform'
+    condition = 1
+    form = TblLearnTopicsForm(initial={'snippet_topics_added_by':userid})
+    if request.method == 'POST':
+        form = TblSnippetTopicsForm(request.POST)
+        if form.is_valid():
+            inst = form.save(commit=True)
+            inst.save()
+            return HttpResponseRedirect(reverse(redirect_url1))
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
+    return render(request, template,context)
+
+@login_required
+def learn_edit_form(request,learn_data_id):
+    template = 'myapp/dynamic_form.html'
+    e = TblLearnTopics.objects.get(learn_data_id=learn_data_id)
+    aboutid = TblLearnTopics.objects.get(learn_data_id=learn_data_id).learn_data_id
+    model1 = TblLearnTopics.objects.get(learn_data_id__in=[learn_data_id]).learn_topics
+    userid = User.objects.get(username=request.user).id
+    condition = 2
+    activetab = 'learn'
+    action = 'Edit'
+    redirect_url1 = 'learn'
+    redirect_url2 = 'learneditform'
+    form = TblLearnTopicsForm(instance=e)
+    if request.method == 'POST':
+        form = TblLearnTopicsForm(request.POST,instance=e)
+        if form.is_valid():
+            inst = form.save(commit=True)
+            inst.save()
+            return HttpResponseRedirect(reverse(redirect_url1))
+    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
+    return render(request, template,context)
+
+
 def learn_topics(request,learn_topics_id):
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
@@ -266,7 +350,7 @@ def learn_topics(request,learn_topics_id):
     return render(request, template,context)
 
 @login_required
-def learn_add_form(request,learn_topics_id):
+def learn_topics_add_form(request,learn_topics_id):
     template = 'myapp/dynamic_form.html'
     model = TblLearnData.objects.filter(learn_data_publish__in=[2]).filter(learn_topics__in=[learn_topics_id])
     model1 = TblLearnTopics.objects.get(learn_topics_id__in=[learn_topics_id]).learn_topics
@@ -275,7 +359,7 @@ def learn_add_form(request,learn_topics_id):
     action = 'Add'
     redirect_url1 = 'learn'
     redirect_url2 = 'learntopics'
-    redirect_url3 = 'learnaddform'
+    redirect_url3 = 'learntopicsaddform'
     form = TblLearnDataForm(initial={'learn_topics':learn_topics_id,'learn_data_added_by':userid})
     if request.method == 'POST':
         form = TblLearnDataForm(request.POST)
@@ -287,7 +371,7 @@ def learn_add_form(request,learn_topics_id):
     return render(request, template,context)
 
 @login_required
-def learn_edit_form(request,learn_data_id):
+def learn_topics_edit_form(request,learn_data_id):
     template = 'myapp/dynamic_form.html'
     e = TblLearnData.objects.get(learn_data_id=learn_data_id)
     learnid = TblLearnData.objects.get(learn_data_id=learn_data_id).learn_topics_id
@@ -297,7 +381,7 @@ def learn_edit_form(request,learn_data_id):
     action = 'Edit'
     redirect_url1 = 'learn'
     redirect_url2 = 'learntopics'
-    redirect_url3 = 'learneditform'
+    redirect_url3 = 'learntopicseditform'
     form = TblLearnDataForm(instance=e)
     if request.method == 'POST':
         form = TblLearnDataForm(request.POST,instance=e)
@@ -329,13 +413,13 @@ def blog_topics(request,blog_id):
     return render(request, template,context)
 
 @login_required
-def blog_add_form(request):
+def blog_topics_add_form(request):
     template = 'myapp/dynamic_form.html'
     userid = User.objects.get(username=request.user).id
     activetab = 'blog'
     action = 'Add'
     redirect_url1 = 'blog'
-    redirect_url2 = 'blogaddform'
+    redirect_url2 = 'blogtopicsaddform'
     condition = 1
     form = TblBlogForm(initial={'blog_added_by':userid})
     if request.method == 'POST':
@@ -348,7 +432,7 @@ def blog_add_form(request):
     return render(request, template,context)
 
 @login_required
-def blog_edit_form(request,blog_id):
+def blog_topics_edit_form(request,blog_id):
     template = 'myapp/dynamic_form.html'
     e = TblBlog.objects.get(blog_id=blog_id)
     blogid = TblBlog.objects.get(blog_id=blog_id).blog_id
@@ -358,7 +442,7 @@ def blog_edit_form(request,blog_id):
     action = 'Edit'
     redirect_url1 = 'blog'
     redirect_url2 = 'blogtopics'
-    redirect_url3 = 'blogeditform'
+    redirect_url3 = 'blogtopicseditform'
     form = TblBlogForm(instance=e)
     if request.method == 'POST':
         form = TblBlogForm(request.POST,request.FILES,instance=e)

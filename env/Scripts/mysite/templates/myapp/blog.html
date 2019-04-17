@@ -12,10 +12,8 @@
 				<div class="colorlib-narrow-content">
 					<div class="row">
 						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							{{perms.tbl_blog.myapp.add_tblblog }}
-						{% if perms.tbl_blog.myapp.add_tblblog  %}
-
-						<span class="heading-meta"><a  href="{% url 'blogaddform' %}">Add</a></span>
+						{% if perms.myapp.add_tblblog %}
+							<span class="heading-meta"><a  href="{% url 'blogtopicsaddform' %}">Add</a></span>
 						{% endif %}
 						<h2 class="colorlib-heading">Read Blog</h2>
 						</div>

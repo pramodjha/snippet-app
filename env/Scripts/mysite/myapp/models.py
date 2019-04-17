@@ -108,7 +108,7 @@ class TblLearnTopics(models.Model):
     learn_topics = models.CharField(max_length=255, blank=True, null=True)
     learn_topics_icon = models.FileField(upload_to='learn_topics/',blank=True, null=True)
     learn_topics_coverpage_img = models.FileField(upload_to='learn_topics/',blank=True, null=True)
-    learn_topics_description =  HTMLField()
+    learn_topics_description =   models.CharField(max_length=255, blank=True, null=True)
     learn_topics_added_by = models.ForeignKey(User, models.DO_NOTHING, db_column='learn_topics_added_by',blank=True)
     learn_topics_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
 
@@ -174,7 +174,7 @@ class TblSnippetTopics(models.Model):
     snippet_topics = models.CharField(max_length=100, blank=True, null=True)
     snippet_topics_icon = models.FileField(upload_to='snippet_topics/',blank=True, null=True)
     snippet_topics_coverpage_img = models.FileField(upload_to='snippet_topics/',blank=True, null=True)
-    snippet_topics_description =  HTMLField()
+    snippet_topics_description =  models.CharField(max_length=255, blank=True, null=True)
     snippet_topics_expire = models.CharField(max_length=100, blank=True, null=True)
     snippet_topics_added_by = models.ForeignKey(User, models.DO_NOTHING, db_column='Snippet_topics_added_by')  # Field name made lowercase.
     snippet_topics_publish = models.ForeignKey(TblPublish, models.DO_NOTHING)

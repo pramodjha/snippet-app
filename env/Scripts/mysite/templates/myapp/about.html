@@ -9,6 +9,8 @@
 		<div id="colorlib-main">
 			<div class="colorlib-about">
 				<div class="colorlib-narrow-content">
+					<span class="heading-meta"><a  href="{% url 'aboutaddform'  %}">Add</a></span>
+
 					{% for data in model %}
 						{% if not forloop.counter|divisibleby:2 %}
 							<div class="row row-bottom-padded-md">
@@ -20,6 +22,8 @@
 										<div class="about-desc">
 											<h2 class="colorlib-heading">{{data.about_content|safe}}</h2>
 											<p>{{data.about_content_description|safe }}</p>
+											<span class="heading-meta"><a  href="{% url 'abouteditform' data.about_id %}">Edit</a></span>
+
 										</div>
 									</div>
 								</div>
