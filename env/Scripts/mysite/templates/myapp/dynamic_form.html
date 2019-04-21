@@ -45,6 +45,9 @@
 												<div><a href="{% url url|add:redirect_url1 %}" id="cancel" name="cancel" class="btn btn-danger">Cancel</a></div>
 											</div>
 										</form>
+										{% if activetab == 'signin' %}
+									</p>Forgot Password <a  href="{% url 'password_reset'%}">Click here </a> to reset</p>
+										{% endif %}
 									</div>
 									</div>
 								</div>

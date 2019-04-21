@@ -234,3 +234,16 @@ class TblAboutExpert(models.Model):
     class Meta:
         managed = False
         db_table = 'tbl_about_expert'
+
+
+class TblQueries(models.Model):
+    queries_id = models.AutoField(db_column='Queries_id', primary_key=True)  # Field name made lowercase.
+    datetime = models.DateTimeField(db_column='Datetime',default= django.utils.timezone.now)  # Field name made lowercase.
+    name = models.CharField(db_column='Name', max_length=255)  # Field name made lowercase.
+    email = models.CharField(db_column='Email', max_length=255)  # Field name made lowercase.
+    subject = models.CharField(db_column='Subject', max_length=255)  # Field name made lowercase.
+    message = models.TextField(db_column='Message')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'tbl_Queries'

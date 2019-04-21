@@ -33,17 +33,15 @@
 						</div>
 							</form>
 						</div>
+						<div class="col-xs-12 col-md-8 animate-box">
 					{% for data in filter.qs %}
-					<div class="row " >
-						{% if not forloop.counter|divisibleby:2 %}
-						<div class="col-xs-12 col-md-8 background1">
-						{% else %}
-						<div class="col-xs-12 col-md-8 background2">
-						{% endif %}
+					<div class="col-xs-12 col-md-12 animate-box  background1">
+					<div class="row" >
+						<div class="col-xs-12 col-md-12 animate-box background1">
 						 <div class="col-xs-12 col-md-12 animate-box"   data-animate-effect="fadeInLeft">
 							<div class="col-xs-12 col-md-12 animate-box" data-animate-effect="fadeInLeft">
 						 <span class="fontsytle1">{{data.snippet_data_subject|safe}}</span>
-					 </div>
+					 	</div>
 							</div>
 								<div class="col-xs-12 col-md-12 animate-box" data-animate-effect="fadeInLeft">
 									<div class="col-xs-12 col-md-12 animate-box " data-animate-effect="fadeInLeft">
@@ -60,8 +58,22 @@
 								</div>
 							</div>
 						</div>
+					</div>
 						{% endfor %}
 					</div>
+								<div class="col-xs-12 col-md-4 padding_left animate-box ">
+														<div class="background1 animate-box ">
+														<div  class="fontsytle1 background3"> Topics </div>
+														<div class ="padding">
+															{% for data in filter.qs %}
+															<li class="fontsytle3 "><a href="{% url 'snippetview' data.snippet_data_id %}">{{data.snippet_data_subject|safe}}</a> </li>
+															{% endfor %}
+														</div>
+													</div>
+												</div>
+
+					</div>
+				</div>
 				</div>
 			</div>
 		</div>

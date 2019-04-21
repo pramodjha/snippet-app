@@ -1,15 +1,59 @@
-from .models import TblPublish, TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments, TblLearnDataComments, TblBlogGvp, TblLearnDataGvp, TblSnippetDataGvp, TblAbout, TblHome
+from .models import TblPublish, TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments, TblLearnDataComments, TblBlogGvp, TblLearnDataGvp, TblSnippetDataGvp, TblAbout, TblHome, TblQueries
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
 import sys
-from .form import TblAboutForm, TblSnippetTopicsForm, TblSnippetDataForm ,TblBlogForm,TblBlogCommentsForm, TblLearnDataCommentsForm, TblBlogGvpForm,TblLearnDataGvpForm,TblHomeForm,TblAboutForm, TblLearnDataForm, UsersigninForm, UserRegistrationForm, TblLearnTopicsForm
+from .form import TblAboutForm, TblSnippetTopicsForm, TblSnippetDataForm ,TblBlogForm,TblBlogCommentsForm, TblLearnDataCommentsForm, TblBlogGvpForm,TblLearnDataGvpForm,TblHomeForm,TblAboutForm, TblLearnDataForm, UsersigninForm, UserRegistrationForm, TblLearnTopicsForm, TblQueriesForm,SignupForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .filters import SnippetFilter, LearnFilter, BlogFilter
 from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail
+from django.conf import settings
+
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 
 # Create your views here.
+@login_required
+def email(request):
+    print("Email")
+    subject = 'Thank you for registering to our site'
+    current_site = get_current_site(request)
+    message = render_to_string('myapp/acc_active_email.html', {
+                'user': User,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(User.pk)).decode(),
+                'token':account_activation_token.make_token(User),
+            })
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['jha.pramod234@gmail.com',]
+    send_mail( subject, message, email_from, recipient_list )
+    return HttpResponseRedirect(reverse('home'))
+
+def activate(request, uidb64, token):
+    redirect_url = 'thankyou'
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+        print(user)
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return  HttpResponseRedirect(reverse(redirect_url,args = (2,)))
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 def template_generator(template_folder='myapp',function_name=None,file_extention='.html'):
     template = template_folder + "/" +function_name + file_extention
@@ -49,30 +93,28 @@ def signup(request):
     redirect_url1 = 'signup'
     action = 'Create Account'
     condition = 3
-    form = UserRegistrationForm()
+    form = SignupForm()
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+        form = SignupForm(request.POST)
         if form.is_valid():
-            userObj = form.cleaned_data
-            username =  userObj['username']
-            email =  userObj['email']
-            password =  userObj['password']
-            passwordagain =  userObj['passwordagain']
-            firstname =  userObj['firstname']
-            lastname =  userObj['lastname']
-            if password == passwordagain:
-                if not (User.objects.filter(username=username).exists()):
-                    new_user = User.objects.create_user(username, email, password)
-                    new_user.is_active = True
-                    new_user.first_name = firstname
-                    new_user.last_name = lastname
-                    new_user.save()
-                    try:
-                        user = authenticate(username = username, password = password)
-                        login(request, user)
-                        return HttpResponseRedirect(reverse('home'))
-                    except:
-                        return HttpResponseRedirect(reverse('home'))
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your blog account.'
+            message = render_to_string('myapp/acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                'token':account_activation_token.make_token(user),
+            })
+            email_from = settings.EMAIL_HOST_USER
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                        mail_subject, message, email_from,to=[to_email]
+            )
+            email.send()
+            return  HttpResponseRedirect(reverse('thankyou',args = (1,)))
     context = {'form' : form,'activetab':activetab,'redirect_url1':redirect_url1,'action':action,'condition':condition}
     return render(request, template,context)
 
@@ -86,7 +128,7 @@ def signout(request):
 def home(request):
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
-    model = TblAbout.objects.filter(about_publish__in=[2])
+    model = TblHome.objects.filter(home_publish__in=[2])
     context = {'activetab':activetab,'model':model}
     return render(request, template,context)
 
@@ -101,7 +143,7 @@ def home_add_form(request):
     condition = 1
     form = TblHomeForm(initial={'home_added_by':userid})
     if request.method == 'POST':
-        form = TblHomeForm(request.POST)
+        form = TblHomeForm(request.POST,request.FILES)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
@@ -113,22 +155,22 @@ def home_add_form(request):
 def home_edit_form(request,home_id):
     template = 'myapp/dynamic_form.html'
     e = TblHome.objects.get(home_id=home_id)
-    aboutid = TblHome.objects.get(home_id=home_id).home_id
+    homeid = TblHome.objects.get(home_id=home_id).home_id
     model1 = TblHome.objects.get(home_id__in=[home_id]).home_content
     userid = User.objects.get(username=request.user).id
     condition = 2
     activetab = 'home'
     action = 'Edit'
-    redirect_url1 = 'about'
+    redirect_url1 = 'home'
     redirect_url2 = 'homeeditform'
-    form = TblAboutForm(instance=e)
+    form = TblHomeForm(instance=e)
     if request.method == 'POST':
-        form = TblAboutForm(request.POST,instance=e)
+        form = TblHomeForm(request.POST,request.FILES,instance=e)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
+    context = {'form':form,'id':homeid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 
@@ -152,7 +194,7 @@ def about_add_form(request):
     condition = 1
     form = TblAboutForm(initial={'about_added_by':userid})
     if request.method == 'POST':
-        form = TblAboutForm(request.POST)
+        form = TblAboutForm(request.POST,request.FILES)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
@@ -174,7 +216,7 @@ def about_edit_form(request,about_id):
     redirect_url2 = 'abouteditform'
     form = TblAboutForm(instance=e)
     if request.method == 'POST':
-        form = TblAboutForm(request.POST,instance=e)
+        form = TblAboutForm(request.POST,request.FILES,instance=e)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
@@ -201,7 +243,7 @@ def snippet_add_form(request):
     condition = 1
     form = TblSnippetTopicsForm(initial={'snippet_topics_added_by':userid})
     if request.method == 'POST':
-        form = TblSnippetTopicsForm(request.POST)
+        form = TblSnippetTopicsForm(request.POST,request.FILES)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
@@ -212,9 +254,9 @@ def snippet_add_form(request):
 @login_required
 def snippet_edit_form(request,snippet_id):
     template = 'myapp/dynamic_form.html'
-    e = TblSnippetTopics.objects.get(snippet_id=snippet_id)
-    aboutid = TblSnippetTopics.objects.get(snippet_id=snippet_id).snippet_id
-    model1 = TblSnippetTopics.objects.get(snippet_id__in=[snippet_id]).snippet_topics
+    e = TblSnippetTopics.objects.get(snippet_topics_id=snippet_id)
+    aboutid = TblSnippetTopics.objects.get(snippet_topics_id=snippet_id).snippet_topics_id
+    model1 = TblSnippetTopics.objects.get(snippet_topics_id=snippet_id).snippet_topics
     userid = User.objects.get(username=request.user).id
     condition = 2
     activetab = 'snippet'
@@ -223,7 +265,7 @@ def snippet_edit_form(request,snippet_id):
     redirect_url2 = 'snippeteditform'
     form = TblSnippetTopicsForm(instance=e)
     if request.method == 'POST':
-        form = TblSnippetTopicsForm(request.POST,instance=e)
+        form = TblSnippetTopicsForm(request.POST,request.FILES,instance=e)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
@@ -257,7 +299,7 @@ def snippet_topics_add_form(request,snippet_topics_id):
     redirect_url3 = 'snippettopicsaddform'
     form = TblSnippetDataForm(initial={'snippet_topics':snippet_topics_id,'snippet_data_added_by':userid})
     if request.method == 'POST':
-        form = TblSnippetDataForm(request.POST)
+        form = TblSnippetDataForm(request.POST,request.FILES)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
@@ -279,12 +321,20 @@ def snippet_topics_edit_form(request,snippet_data_id):
     redirect_url3 = 'snippettopicseditform'
     form = TblSnippetDataForm(instance=e)
     if request.method == 'POST':
-        form = TblSnippetDataForm(request.POST,instance=e)
+        form = TblSnippetDataForm(request.POST,request.FILES,instance=e)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url2,args = (topicid,)))
     context = {'form':form,'id':topicid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'model1':model1,'action':action}
+    return render(request, template,context)
+
+def snippet_topics_view(request,snippet_data_id):
+    function_name = get_function_name()
+    template, activetab = template_generator(function_name=function_name)
+    activetab = 'snippet'
+    model = TblSnippetData.objects.filter(snippet_data_id__in=[snippet_data_id])
+    context = {'model':model,'activetab':activetab}
     return render(request, template,context)
 
 def learn(request):
@@ -306,7 +356,7 @@ def learn_add_form(request):
     condition = 1
     form = TblLearnTopicsForm(initial={'snippet_topics_added_by':userid})
     if request.method == 'POST':
-        form = TblSnippetTopicsForm(request.POST)
+        form = TblSnippetTopicsForm(request.POST,request.FILES)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
@@ -317,9 +367,9 @@ def learn_add_form(request):
 @login_required
 def learn_edit_form(request,learn_data_id):
     template = 'myapp/dynamic_form.html'
-    e = TblLearnTopics.objects.get(learn_data_id=learn_data_id)
-    aboutid = TblLearnTopics.objects.get(learn_data_id=learn_data_id).learn_data_id
-    model1 = TblLearnTopics.objects.get(learn_data_id__in=[learn_data_id]).learn_topics
+    e = TblLearnTopics.objects.get(learn_topics_id=learn_data_id)
+    aboutid = TblLearnTopics.objects.get(learn_topics_id=learn_data_id).learn_topics_id
+    model1 = TblLearnTopics.objects.get(learn_topics_id=learn_data_id).learn_topics
     userid = User.objects.get(username=request.user).id
     condition = 2
     activetab = 'learn'
@@ -328,13 +378,14 @@ def learn_edit_form(request,learn_data_id):
     redirect_url2 = 'learneditform'
     form = TblLearnTopicsForm(instance=e)
     if request.method == 'POST':
-        form = TblLearnTopicsForm(request.POST,instance=e)
+        form = TblLearnTopicsForm(request.POST,request.FILES,instance=e)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
     context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
+
 
 
 def learn_topics(request,learn_topics_id):
@@ -362,7 +413,7 @@ def learn_topics_add_form(request,learn_topics_id):
     redirect_url3 = 'learntopicsaddform'
     form = TblLearnDataForm(initial={'learn_topics':learn_topics_id,'learn_data_added_by':userid})
     if request.method == 'POST':
-        form = TblLearnDataForm(request.POST)
+        form = TblLearnDataForm(request.POST,request.FILES)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
@@ -384,12 +435,20 @@ def learn_topics_edit_form(request,learn_data_id):
     redirect_url3 = 'learntopicseditform'
     form = TblLearnDataForm(instance=e)
     if request.method == 'POST':
-        form = TblLearnDataForm(request.POST,instance=e)
+        form = TblLearnDataForm(request.POST,request.FILES,instance=e)
         if form.is_valid():
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url2,args = (learnid,)))
     context = {'form':form,'id':learnid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'model1':model1,'action':action}
+    return render(request, template,context)
+
+def learn_topics_view(request,learn_data_id):
+    function_name = get_function_name()
+    template, activetab = template_generator(function_name=function_name)
+    activetab = 'learn'
+    model = TblLearnData.objects.filter(learn_data_id__in=[learn_data_id])
+    context = {'model':model,'activetab':activetab}
     return render(request, template,context)
 
 def blog(request):
@@ -457,5 +516,36 @@ def blog_topics_edit_form(request,blog_id):
 def contact(request):
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
-    context = {'activetab':activetab}
+    model = TblQueries.objects.all()
+    context = {'activetab':activetab,'model':model}
     return render(request, template,context)
+
+def contact_form(request):
+    template = 'myapp/dynamic_form.html'
+    model = TblQueries.objects.all()
+    activetab = 'contact'
+    action = 'Add'
+    redirect_url1 = 'contact'
+    redirect_url2 = 'contact'
+    condition = 1
+    form = TblQueriesForm()
+    if request.method == 'POST':
+        form = TblQueriesForm(request.POST,request.FILES)
+        if form.is_valid():
+            inst = form.save(commit=True)
+            inst.save()
+            return  HttpResponseRedirect(reverse('thankyou',args = (2,)))
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
+    return render(request, template,context)
+
+def thankyou(request,ty_id):
+    if ty_id =='1':
+        msg = 'Please confirm your email address to complete the registration'
+    elif ty_id =='2':
+        msg = 'Thank you for your email confirmation. you already logged in to your account.'
+    elif ty_id == '3':
+        msg = 'Your Queries has been registered'
+    else:
+        msg = None
+    template = 'myapp/thankyou.html'
+    return render(request, template, {'msg':msg,'ty_id':ty_id})

@@ -1,10 +1,24 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import TblPublish , TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments,TblLearnDataComments, TblBlogGvp, TblLearnDataGvp,TblSnippetDataGvp, TblHome, TblAbout
+from .models import TblPublish , TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments,TblLearnDataComments, TblBlogGvp, TblLearnDataGvp,TblSnippetDataGvp, TblHome, TblAbout, TblQueries
+from django.contrib.auth.forms import UserCreationForm
 
 class UsersigninForm(forms.Form):
     username = forms.CharField(required = True, label = 'Username', max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(required = True, label = 'Password', max_length = 32, widget = forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+class SignupForm(UserCreationForm):
+    email = forms.EmailField(max_length=200, help_text='Required')
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super(SignupForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs['placeholder'] = "Username"
+        self.fields['email'].widget.attrs['placeholder'] = "email"
+        self.fields['password1'].widget.attrs['placeholder'] ="password"
+        self.fields['password2'].widget.attrs['placeholder'] = "password Again"
 
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(required = True, min_length=6,label = 'Username', max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Username'}) )
@@ -132,7 +146,7 @@ class TblLearnTopicsForm(forms.ModelForm):
         super(TblLearnTopicsForm, self).__init__(*args, **kwargs)
         self.fields['learn_topics_datetime'].widget = forms.HiddenInput()
         self.fields['learn_topics_added_by'].widget = forms.HiddenInput()
-        self.fields['learn_topics_icon'].widget = forms.HiddenInput()
+        self.fields['learn_topics_icon'].widget.attrs['placeholder'] = 'Icon'
         self.fields['learn_topics_coverpage_img'].widget = forms.HiddenInput()
         self.fields['learn_topics'].widget.attrs['placeholder'] = "Topics"
         self.fields['learn_topics_description'].widget.attrs['placeholder']  = "Description"
@@ -164,3 +178,15 @@ class TblSnippetTopicsForm(forms.ModelForm):
         if not self.cleaned_data['snippet_topics_added_by']:
             return User()
         return self.cleaned_data['snippet_topics_added_by']
+
+class TblQueriesForm(forms.ModelForm):
+    class Meta():
+        model = TblQueries
+        fields = '__all__'
+    def __init__(self, *args, **kwargs):
+        super(TblQueriesForm, self).__init__(*args, **kwargs)
+        self.fields['datetime'].widget = forms.HiddenInput()
+        self.fields['name'].widget.attrs['placeholder'] = "Name"
+        self.fields['email'].widget.attrs['placeholder']  = "Email"
+        self.fields['subject'].widget.attrs['placeholder']  = "Subject"
+        self.fields['message'].widget.attrs['placeholder']  = "Message"

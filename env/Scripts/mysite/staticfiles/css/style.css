@@ -1286,6 +1286,14 @@ body.offcanvas {
       color: #e68a00
     }
 
+    .fontsytle3{
+      font-size: 14px;
+      font-weight: 1000;
+      color: #995c00
+
+    }
+
+
 .background1 {
 padding: 10px;
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -1293,4 +1301,21 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 .background2 {
   padding: 10px;
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.background2 {
+  padding: 10px;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.background3 {
+  padding: 10px;
+ box-shadow: 0 0 5px 0 ;
+
+
+.padding {
+  padding-top: 15px
+}
+
+.padding_left {
+  padding-left: 40px
 }

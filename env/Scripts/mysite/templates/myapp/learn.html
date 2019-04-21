@@ -10,9 +10,10 @@
 				<div class="colorlib-narrow-content">
 					<div class="row">
 						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
+							{% if perms.myapp.change_tbllearntopics %}
 							<span class="heading-meta"><a  href="{% url 'learnaddform'  %}">Add</a></span>
+							{% endif %}
 							<span class="heading-meta">Learn</span>
-
 							<h2 class="colorlib-heading">Here are some of our expertise</h2>
 						</div>
 					</div>
@@ -22,15 +23,17 @@
 				<div class="col-md-6 row-bottom-padded-md">
 					<div class="colorlib-feature animate-box" data-animate-effect="fadeInLeft">
 						<div class="colorlib-icon">
-							<i class="flaticon-worker"></i>
+							<i ><img src="/media/{{data.learn_topics_icon}}" class="img-responsive"></i>
 								</div>
 									<div class="colorlib-text">
 										<h3><a href="{% url 'learntopics' data.learn_topics_id %}">{{data.learn_topics}}</a></h3>
-										<p>{{data.learn_topics_description}}</p>
+										{% if perms.myapp.change_tbllearntopics %}
+										<a href="{% url 'learneditform' data.learn_topics_id %}">Edit</a>
+										{% endif %}
 									</div>
 								</div>
 							</div>
-					{% endfor %}
+							{% endfor %}
 				</div>
 			</div>
 		</div>

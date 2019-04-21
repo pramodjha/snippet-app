@@ -24,9 +24,9 @@
 						<div class="col-md-4 col-sm-6 animate-box" data-animate-effect="fadeInLeft">
 							<div class="blog-entry">
 								{% if data.blog_pics %}
-								<a href="blog.html" class="blog-img"><img src="/media/{{data.blog_pics}}" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
+								<a href="{% url 'blogtopics' data.blog_id %}" class="blog-img"><img src="/media/{{data.blog_pics}}" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
 							{% else %}
-								<a href="blog.html" class="blog-img"><img src="/media/blog/default.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
+								<a href="{% url 'blogtopics' data.blog_id %}" class="blog-img"><img src="/media/blog/default.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
 								{% endif %}
 								<div class="desc">
 									<span><small>{{data.blog_datetime|safe}}</small> | <small> Like</a></small> </span>
@@ -51,25 +51,5 @@
 					</div>
 				</div>
 			</div>
-
-			<div id="get-in-touch" class="colorlib-bg-color">
-				<div class="colorlib-narrow-content">
-					<div class="row">
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
-							<h2>Get in Touch!</h2>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<p class="colorlib-lead">Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-							<p><a href="#" class="btn btn-primary btn-learn">Contact me!</a></p>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
 
 {% endblock %}

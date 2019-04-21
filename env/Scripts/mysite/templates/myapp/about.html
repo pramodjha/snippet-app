@@ -9,20 +9,24 @@
 		<div id="colorlib-main">
 			<div class="colorlib-about">
 				<div class="colorlib-narrow-content">
+					{% if perms.myapp.add_tblabout %}
 					<span class="heading-meta"><a  href="{% url 'aboutaddform'  %}">Add</a></span>
-
+					{% endif %}
 					{% for data in model %}
 						{% if not forloop.counter|divisibleby:2 %}
 							<div class="row row-bottom-padded-md">
 								<div class="col-md-6">
-									<div class="about-img animate-box" data-animate-effect="fadeInLeft" style="background-image: url(/static/images/img_bg_1.jpg);">
+									<div class="about-img animate-box" data-animate-effect="fadeInLeft" style="background-image: url('/media/{{data.about_pics}}');">
 									</div>
 								 </div>
+
 									<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
+										{% if perms.myapp.change_tblabout %}
+										<span class="heading-meta"><a  href="{% url 'abouteditform' data.about_id %}">Edit</a></span>
+										{% endif %}
 										<div class="about-desc">
 											<h2 class="colorlib-heading">{{data.about_content|safe}}</h2>
 											<p>{{data.about_content_description|safe }}</p>
-											<span class="heading-meta"><a  href="{% url 'abouteditform' data.about_id %}">Edit</a></span>
 
 										</div>
 									</div>
@@ -30,13 +34,17 @@
 								{% else %}
 								<div class="row row-bottom-padded-md">
 										<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
+											{% if perms.myapp.change_tblabout %}
+											<span class="heading-meta"><a  href="{% url 'abouteditform' data.about_id %}">Edit</a></span>
+											{% endif %}
+
 											<div class="about-desc">
 												<h2 class="colorlib-heading">{{data.about_content|safe}}</h2>
 												<p>{{data.about_content_description|safe }}</p>
 											</div>
 										</div>
 										<div class="col-md-6">
-											<div class="about-img animate-box" data-animate-effect="fadeInLeft" style="background-image: url(/static/images/img_bg_1.jpg);">
+											<div class="about-img animate-box" data-animate-effect="fadeInLeft" style="background-image: url('/media/{{data.about_pics}}');">
 											</div>
 										 </div>
 									</div>

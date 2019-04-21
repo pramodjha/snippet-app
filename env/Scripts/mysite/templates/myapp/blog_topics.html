@@ -34,22 +34,22 @@
 							</form>
 						</div>
 
+		<div class="col-xs-12 col-md-10 animate-box">
 					{% for data in filter.qs %}
-					<div class="row ">
-						<div class="col-md-12">
-						 <div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
-					 		</div>
-								<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
-					 				<div class=" col-md-12 animate-box" data-animate-effect="fadeInLeft">
-										{{data.blog_title|safe}}
+					<div class="col-xs-12 col-md-12 animate-box  background1">
+					<div class="row" >
+						<div class="col-xs-12 col-md-12 animate-box background1">
+								<div class="col-md-12 fontsytle1 animate-box" data-animate-effect="fadeInLeft">
+								{{data.blog_title}}
 									</div>
-									<div class=" col-md-12 animate-box" data-animate-effect="fadeInLeft">
-										{{data.blog_content|safe}}
-									</div>
-
 								</div>
 							</div>
 						</div>
+								<div class="row padding">
+									<div class=" col-md-12 background3 animate-box padding" data-animate-effect="fadeInLeft">
+										{{data.blog_content|safe}}
+									</div>
+							</div>
 						{% endfor %}
 					</div>
 				</div>

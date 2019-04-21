@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+{% extends "basetemplate.html" %}
+{% block navblock %}
+{% include "navbar.html" %}
+{% endblock %}
+
+{% block content %}
+		<div id="colorlib-main">
+			<div class="colorlib-contact">
+				<div class="colorlib-narrow-content">
+					<div class="row">
+						<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
+							<h2 class="colorlib-heading">Thank You</h2>
+							{% if ty_id == '1' %}
+							<div><span class="heading-meta">{{msg}}</span></div>
+							<div><a>Activation link has been sent to your registered Email Address </a></div>
+							{% elif ty_id == '2' %}
+							<div><span class="heading-meta">{{msg}}</span></div>
+							<div><a  href="{% url 'home'%}">Click here </a> to go home page</div>
+							{% elif ty_id == '3' %}
+							<div><span class="heading-meta">{{msg}}</span></div>
+							{% endif %}
+						</div>
+					</div>
+		</div>
+	</div>
+</div>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
+	{% endblock %}
