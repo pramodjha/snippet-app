@@ -28,12 +28,12 @@
 							<div class="project frame">
 								<div class="vertical">
 									<div class="horizontal">
-								<h1 class="fontsytle"> <a href="{% url 'snippettopics' data.snippet_topics_id %}">{{data.snippet_topics}}</a> <h1>
+								<h1 class="fontsytle"> <a href="{% url 'snippettopics' data.slug %}">{{data.snippet_topics}}</a> <h1>
 									</div>
 
 								</div>
 								{% if perms.myapp.change_tblsnippettopics %}
-								<a href="{% url 'snippeteditform' data.snippet_topics_id %}">Edit</a>
+								<a href="{% url 'snippeteditform' data.slug %}">Edit</a>
 								{% endif %}
 								</div>
 						</div>

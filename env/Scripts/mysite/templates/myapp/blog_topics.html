@@ -16,25 +16,16 @@
 							{% if perms.myapp.change_tblblogtopics %}
 							<span class="heading-meta"><a  href="{% url 'blogtopicseditform' id %}">{{heading}}</a></span>
 							{% endif %}
-						<div class="col-md-5  animate-box" data-animate-effect="fadeInLeft">
+						<div class="col-lg-8 col-md-12 ">
 							{% for data1 in model1 %}
-							<h2 class="colorlib-heading"><a  href="{% url 'blog' %}">Blog</a>/<a  href="{% url 'blogtopics' data1.blog_id %}">{{data1.blog_title}}</a> </h2>
+							<h2 class="colorlib-heading"><a  href="{% url 'blog' %}">Blog</a>/<a  href="{% url 'blogtopics' data1.slug %}">{{data1.blog_title}}</a> </h2>
 							{% endfor %}
 						</div>
-						<div class="col-md-7  animate-box" data-animate-effect="fadeInLeft">
-							<form method="get">
-								<span class="col-md-5">
-									{{ filter.form.blog_keyword|add_class:'form-control' }}
-								</span>
-								<span class="col-md-2">
-								{% buttons %}<button type="submit" class="btn btn-success">Submit</button>{% endbuttons %}
-								</span>
-							</div>
+
 						</div>
-							</form>
 						</div>
 
-		<div class="col-xs-12 col-md-10 animate-box">
+		<div class="col-xs-12 col-md-12 animate-box">
 					{% for data in filter.qs %}
 					<div class="col-xs-12 col-md-12 animate-box  background1">
 					<div class="row" >

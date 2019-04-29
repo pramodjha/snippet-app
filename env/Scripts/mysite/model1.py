@@ -118,6 +118,19 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
+class TblQueries(models.Model):
+    queries_id = models.AutoField(db_column='Queries_id', primary_key=True)  # Field name made lowercase.
+    datetime = models.DateTimeField(db_column='Datetime')  # Field name made lowercase.
+    name = models.CharField(db_column='Name', max_length=255)  # Field name made lowercase.
+    email = models.CharField(db_column='Email', max_length=255)  # Field name made lowercase.
+    subject = models.CharField(db_column='Subject', max_length=255)  # Field name made lowercase.
+    message = models.TextField(db_column='Message')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'tbl_Queries'
+
+
 class TblAbout(models.Model):
     about_id = models.AutoField(primary_key=True)
     about_datetime = models.DateTimeField(blank=True, null=True)
@@ -125,6 +138,8 @@ class TblAbout(models.Model):
     about_content = models.CharField(max_length=255, blank=True, null=True)
     about_content_description = models.TextField(blank=True, null=True)
     about_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
+    about_added_by = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='about_added_by', blank=True, null=True)
+    slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -140,6 +155,7 @@ class TblAboutExpert(models.Model):
     expert_description = models.TextField(blank=True, null=True)
     expert_details_added_by = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='expert_details_added_by')
     expert_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
+    slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -156,6 +172,9 @@ class TblBlog(models.Model):
     blog_description = models.TextField(blank=True, null=True)
     blog_added_by = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='blog_added_by')
     blog_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
+    blog_keyword = models.CharField(max_length=255, blank=True, null=True)
+    blog_pics = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -193,6 +212,7 @@ class TblHome(models.Model):
     home_content = models.CharField(max_length=255, blank=True, null=True)
     home_content_description = models.TextField(blank=True, null=True)
     home_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
+    home_added_by = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='home_added_by', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -209,6 +229,8 @@ class TblLearnData(models.Model):
     learn_data_description = models.TextField(blank=True, null=True)
     learn_data_added_by = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='learn_data_added_by')
     learn_data_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
+    learn_data_keyword = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -239,6 +261,18 @@ class TblLearnDataGvp(models.Model):
         db_table = 'tbl_learn_data_gvp'
 
 
+class TblLearnLike(models.Model):
+    learn_like_id = models.AutoField(primary_key=True)
+    learn_data = models.ForeignKey(TblLearnData, models.DO_NOTHING)
+    learn_like_datetime = models.DateTimeField(blank=True, null=True)
+    user_liked = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='user_liked', blank=True, null=True)
+    learn_like = models.BooleanField()
+
+    class Meta:
+        managed = False
+        db_table = 'tbl_learn_like'
+
+
 class TblLearnTopics(models.Model):
     learn_topics_id = models.AutoField(primary_key=True)
     learn_topics_datetime = models.DateTimeField(blank=True, null=True)
@@ -248,6 +282,7 @@ class TblLearnTopics(models.Model):
     learn_topics_description = models.TextField(blank=True, null=True)
     learn_topics_added_by = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='learn_topics_added_by')
     learn_topics_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
+    slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -277,6 +312,7 @@ class TblSnippetData(models.Model):
     snippet_data_subject = models.CharField(max_length=255, blank=True, null=True)
     snippet_data_keyword = models.CharField(max_length=255, blank=True, null=True)
     snippet_data_code = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -296,6 +332,18 @@ class TblSnippetDataGvp(models.Model):
         db_table = 'tbl_snippet_data_gvp'
 
 
+class TblSnippetLike(models.Model):
+    snippet_like_id = models.AutoField(primary_key=True)
+    snippet_data = models.ForeignKey(TblSnippetData, models.DO_NOTHING)
+    snippet_like_datetime = models.DateTimeField(blank=True, null=True)
+    user_liked = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='user_liked', blank=True, null=True)
+    snippet_like = models.BooleanField()
+
+    class Meta:
+        managed = False
+        db_table = 'tbl_snippet_like'
+
+
 class TblSnippetTopics(models.Model):
     snippet_topics_id = models.AutoField(primary_key=True)
     snippet_topics_datetime = models.DateTimeField(blank=True, null=True)
@@ -306,6 +354,7 @@ class TblSnippetTopics(models.Model):
     snippet_topics_expire = models.CharField(max_length=100, blank=True, null=True)
     snippet_topics_added_by = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='Snippet_topics_added_by')  # Field name made lowercase.
     snippet_topics_publish = models.ForeignKey(TblPublish, models.DO_NOTHING)
+    slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False

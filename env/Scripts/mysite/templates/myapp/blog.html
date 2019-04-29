@@ -24,13 +24,13 @@
 						<div class="col-md-4 col-sm-6 animate-box" data-animate-effect="fadeInLeft">
 							<div class="blog-entry">
 								{% if data.blog_pics %}
-								<a href="{% url 'blogtopics' data.blog_id %}" class="blog-img"><img src="/media/{{data.blog_pics}}" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
+								<a href="{% url 'blogtopics' slug=data.slug %}" class="blog-img"><img src="/media/{{data.blog_pics}}" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
 							{% else %}
-								<a href="{% url 'blogtopics' data.blog_id %}" class="blog-img"><img src="/media/blog/default.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
+								<a href="{% url 'blogtopics' slug=data.slug %}" class="blog-img"><img src="/media/blog/default.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
 								{% endif %}
 								<div class="desc">
 									<span><small>{{data.blog_datetime|safe}}</small> | <small> Like</a></small> </span>
-									<h3><a href="{% url 'blogtopics' data.blog_id %}">{{data.blog_title|safe}}</a></h3>
+									<h3><a href="{% url 'blogtopics' slug=data.slug %}">{{data.blog_title|safe}}</a></h3>
 									<p>{{data.blog_description|safe}}</p>
 								</div>
 							</div>

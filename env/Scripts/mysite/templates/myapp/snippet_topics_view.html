@@ -12,25 +12,36 @@
 				<div class="colorlib-narrow-content">
 					<div class="row">
 						<div class="col-md-12 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<div class="col-xs-12 col-md-10 animate-box">
+							<div class="col-xs-12 col-md-12  animate-box" data-animate-effect="fadeInLeft">
+								{% for data1 in model %}
+								<h2 class="colorlib-heading"><a  href="{% url 'snippet' %}"> Snippet</a>/<a  href="{% url 'snippettopics' topics_slug %}">{{data1.snippet_topics}}</a>/<a  href="{% url 'snippetview' data1.slug %}">{{snippet_title}}</a> </h2>
+								{% endfor %}
+
+							</div>
+							<div class="col-xs-12 col-md-12 animate-box">
 								{% for data in model %}
 								<div class="col-xs-12 col-md-12 animate-box  background1">
 									<div class="row" >
 										<div class="col-xs-12 col-md-12 animate-box background1">
 											<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
 					 						<div class=" col-md-12  animate-box fontsytle1" data-animate-effect="fadeInLeft">
-												<a  href="{% url 'snippetview' data.snippet_data_id %}" class="fontstyle3"> {{data.snippet_data_subject|safe}}</a>
+												<a  href="{% url 'snippetview' data.slug %}" class="fontstyle3"> {{data.snippet_data_subject|safe}}</a>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="row padding">
+						<div class=" col-md-12 background3 animate-box padding" data-animate-effect="fadeInLeft">
+							{{data.snippet_data_description|safe}}
+						</div>
+					</div>
+
+							<div class="row padding">
 								<div class=" col-md-12 background3 animate-box padding" data-animate-effect="fadeInLeft">
-									{{data.snippet_data|safe}}
+									{{data.snippet_data_code|safe}}
 								</div>
 						</div>
-
 						{% endfor %}
 					</div>
 			</div>

@@ -22,7 +22,7 @@
 
 									<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
 										{% if perms.myapp.change_tblabout %}
-										<span class="heading-meta"><a  href="{% url 'abouteditform' data.about_id %}">Edit</a></span>
+										<span class="heading-meta"><a  href="{% url 'abouteditform' data.slug %}">Edit</a></span>
 										{% endif %}
 										<div class="about-desc">
 											<h2 class="colorlib-heading">{{data.about_content|safe}}</h2>
@@ -35,7 +35,7 @@
 								<div class="row row-bottom-padded-md">
 										<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
 											{% if perms.myapp.change_tblabout %}
-											<span class="heading-meta"><a  href="{% url 'abouteditform' data.about_id %}">Edit</a></span>
+											<span class="heading-meta"><a  href="{% url 'abouteditform' data.slug %}">Edit</a></span>
 											{% endif %}
 
 											<div class="about-desc">

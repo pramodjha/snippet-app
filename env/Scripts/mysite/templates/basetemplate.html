@@ -35,6 +35,7 @@
 	<link rel="stylesheet"  href="{% static 'css/icomoon.css' %}"  type="text/css" />
 	<!-- Bootstrap  -->
 	<link rel="stylesheet"  href="{% static 'css/bootstrap.css' %}"  type="text/css" />
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"     rel="stylesheet">
 	<!-- Flexslider  -->
 	<link rel="stylesheet"  href="{% static 'css/flexslider.css' %}"  type="text/css" />
 	<!-- Flaticons  -->
@@ -56,22 +57,23 @@
   <div id="colorlib-page">
     <a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
     <aside id="colorlib-aside" role="complementary" class="border js-fullheight">
-      <h1 id="colorlib-logo"><a href="home.html">Snippet</a></h1>
+			<h1 id="colorlib-logo"><a class="heading-meta">Hi! {{username}}</a></h1>
+      <h1 id="colorlib-logo"><a href="home.html">Snippet </a></h1>
 
 			{% block navblock %}
 			{% endblock %}
 
-			<div class="colorlib-footer">
-				<p><small>&copy; <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --> </span> <span>Demo Images: <a href="http://nothingtochance.co/" target="_blank">nothingtochance.co</a></span></small></p>
-				<ul>
+<!--			<div class="colorlib-footer">
+				<p><small>&copy;--> <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+<!--Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+ Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --> <!--</span> <span>Demo Images: <a href="http://nothingtochance.co/" target="_blank">nothingtochance.co</a></span></small></p> -->
+	<!--			<ul>
 					<li><a href="#"><i class="icon-facebook2"></i></a></li>
 					<li><a href="#"><i class="icon-twitter2"></i></a></li>
 					<li><a href="#"><i class="icon-instagram"></i></a></li>
 					<li><a href="#"><i class="icon-linkedin2"></i></a></li>
 				</ul>
-			</div>
+			</div> -->
 
 		</aside>
 
@@ -109,6 +111,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!-- Bootstrap -->
 <script src="{% static 'js/bootstrap.min.js' %}" charset="UTF-8"></script>
 <!-- Waypoints -->
+
 <script src="{% static 'js/jquery.waypoints.min.js' %}" charset="UTF-8"></script>
 <!-- Flexslider -->
 <script src="{% static 'js/jquery.flexslider-min.js' %}" charset="UTF-8"></script>

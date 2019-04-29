@@ -12,14 +12,20 @@
 				<div class="colorlib-narrow-content">
 					<div class="row">
 						<div class="col-md-12 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<div class="col-xs-12 col-md-10 animate-box">
+							<div class="col-md-12  animate-box" data-animate-effect="fadeInLeft">
+								{% for data1 in model %}
+								<h2 class="colorlib-heading"><a  href="{% url 'learn' %}">Learn</a>/<a  href="{% url 'learntopics' topics_slug %}">{{data1.learn_topics}}</a>/<a  href="{% url 'learnview' data1.slug %}">{{learn_title}}</a> </h2>
+								{% endfor %}
+							</div>
+
+							<div class="col-xs-12 col-md-12 animate-box">
 								{% for data in model %}
 								<div class="col-xs-12 col-md-12 animate-box  background1">
 									<div class="row" >
 										<div class="col-xs-12 col-md-12 animate-box background1">
 											<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
 					 						<div class=" col-md-12  animate-box fontsytle1" data-animate-effect="fadeInLeft">
-												<a  href="{% url 'learnview' data.learn_data_id %}" class="fontstyle3"> {{data.learn_data|safe}}</a>
+												<a  href="{% url 'learnview' data.slug %}" class="fontstyle3"> {{data.learn_data|safe}}</a>
 											</div>
 										</div>
 									</div>

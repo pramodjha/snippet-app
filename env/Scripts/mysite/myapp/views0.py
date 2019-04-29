@@ -1,4 +1,4 @@
-from .models import TblPublish, TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments, TblLearnDataComments, TblBlogGvp, TblLearnDataGvp, TblSnippetDataGvp, TblAbout, TblHome, TblQueries, TblSnippetLike,TblLearnLike
+from .models import TblPublish, TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments, TblLearnDataComments, TblBlogGvp, TblLearnDataGvp, TblSnippetDataGvp, TblAbout, TblHome, TblQueries
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
@@ -128,9 +128,9 @@ def signout(request):
 
 
 def home(request):
+    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
-    username = request.user
     model = TblHome.objects.filter(home_publish__in=[2])
     context = {'activetab':activetab,'model':model,'username':username}
     return render(request, template,context)
@@ -153,7 +153,7 @@ def home_add_form(request):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 @login_required
@@ -162,9 +162,10 @@ def home_edit_form(request,home_id):
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
-    e = TblHome.objects.get(home_id=home_id)
-    homeid = TblHome.objects.get(home_id=home_id).home_id
-    model1 = TblHome.objects.get(home_id__in=[home_id]).home_content
+    data_from_model = TblHome.objects.get(home_id=home_id)
+    e = data_from_model
+    homeid = data_from_model.home_id
+    model1 = data_from_model.home_content
     userid = User.objects.get(username=request.user).id
     condition = 2
     activetab = 'home'
@@ -178,16 +179,15 @@ def home_edit_form(request,home_id):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'id':homeid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'id':homeid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 
 def about(request):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
     model = TblAbout.objects.filter(about_publish__in=[2])
-    context = {'activetab':activetab,'model':model,'username':username}
+    context = {'activetab':activetab,'model':model}
     return render(request, template,context)
 
 
@@ -210,19 +210,19 @@ def about_add_form(request):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 @login_required
 def about_edit_form(request,slug):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
-
-    template = 'myapp/dynamic_form.html'
-    e = TblAbout.objects.get(slug=slug)
-    aboutid = TblAbout.objects.get(slug=slug).about_id
-    model1 = TblAbout.objects.get(slug__in=[slug]).about_content
+    data_from_model = TblAbout.objects.get(slug=slug)
+    e = data_from_model
+    aboutid = data_from_model.about_id
+    model1 = data_from_model.about_content
     userid = User.objects.get(username=request.user).id
     condition = 2
     activetab = 'about'
@@ -236,16 +236,15 @@ def about_edit_form(request,slug):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 
 def snippet(request):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
     model = TblSnippetTopics.objects.filter(snippet_topics_publish__in=[2])
-    context = {'activetab':activetab,'model':model,'username':username}
+    context = {'activetab':activetab,'model':model}
     return render(request, template,context)
 
 @login_required
@@ -266,19 +265,19 @@ def snippet_add_form(request):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 @login_required
 def snippet_edit_form(request,slug):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
-
-    template = 'myapp/dynamic_form.html'
-    e = TblSnippetTopics.objects.get(slug=slug)
-    aboutid = TblSnippetTopics.objects.get(slug=slug).snippet_topics_id
-    model1 = TblSnippetTopics.objects.get(slug=slug).snippet_topics
+    data_from_model = TblSnippetTopics.objects.get(slug=slug)
+    e = data_from_model
+    aboutid = data_from_model.snippet_topics_id
+    model1 = data_from_model.snippet_topics
     userid = User.objects.get(username=request.user).id
     condition = 2
     activetab = 'snippet'
@@ -292,63 +291,36 @@ def snippet_edit_form(request,slug):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 def snippet_topics(request,slug):
-    username = request.user
     function_name = get_function_name()
-    snippet_topics_id = TblSnippetTopics.objects.get(slug=slug).snippet_topics_id
+    data_from_model = TblSnippetTopics.objects.all()
+    snippet_topics_id = data_from_model.get(slug=slug).snippet_topics_id
+    data_from_model1 = TblSnippetData.objects.filter(snippet_data_publish__in=[2])
     template, activetab = template_generator(function_name=function_name)
-    model = TblSnippetData.objects.filter(snippet_data_publish__in=[2]).filter(snippet_topics__in=[snippet_topics_id])
-    model1 = TblSnippetTopics.objects.filter(snippet_topics_id__in=[snippet_topics_id])
-    model2 = TblSnippetLike.objects.filter(snippet_like__in=[1])
+    model =  data_from_model1.filter(snippet_topics__in=[snippet_topics_id])
+    model1 = data_from_model.filter(snippet_topics_id__in=[snippet_topics_id])
     heading = 'About/Add'
     activetab = 'snippet'
-    snippet_list = TblSnippetData.objects.filter(snippet_topics__in=[snippet_topics_id])
+    snippet_list = data_from_model1.filter(snippet_topics__in=[snippet_topics_id])
     snippet_filter = SnippetFilter(request.GET, queryset=snippet_list)
-    context = {'activetab':activetab,'model':model,'model1':model1,'heading':heading,'filter': snippet_filter,'username':username,'model2':model2}
+    context = {'activetab':activetab,'model':model,'model1':model1,'heading':heading,'filter': snippet_filter}
     return render(request, template,context)
 
 
 @login_required
-def snippet_like(request):
-    userdata = User.objects.all()
-    userid = userdata.get(username=request.user).id
-    username = userdata.get(username=request.user).username
-    redirect_url1 = 'snippet'
-    print(username)
-    if request.method == 'POST':
-        slug = request.POST.get('slug')
-        print(slug)
-        snippetid = TblSnippetData.objects.get(slug=slug)
-        try:
-            instance = TblSnippetLike.objects.get(user_liked=userid)
-            print(instance.snippet_like == True)
-            if instance.snippet_like == True:
-                instance.snippet_like = False
-                instance.save()
-            else:
-                instance.snippet_like = True
-                instance.save()
-        except:
-            user_instance = User.objects.get(id=userid)
-            p = TblSnippetLike.objects.create(snippet_data_id=snippetid, user_liked=user_instance,snippet_like=True)
-        #print(slug)
-        return HttpResponseRedirect(reverse(redirect_url1))
-    return HttpResponseRedirect(reverse(redirect_url1))
-
-@login_required
 def snippet_topics_add_form(request,slug):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
-
-    template = 'myapp/dynamic_form.html'
-    model1 = TblSnippetTopics.objects.get(slug__in=[slug]).snippet_topics
-    snippet_topics_id = TblSnippetTopics.objects.get(slug__in=[slug]).snippet_topics_id
-    model = TblSnippetData.objects.filter(snippet_data_publish__in=[2]).filter(snippet_topics__in=[snippet_topics_id])
-    userid = User.objects.get(username=request.user).id
+    data_from_model = TblSnippetTopics.objects.all()
+    model1 = data_from_model.get(slug__in=[slug]).snippet_topics
+    snippet_topics_id = data_from_model.get(slug__in=[slug]).snippet_topics_id
+    data_from_model1 = TblSnippetData.objects.filter(snippet_data_publish__in=[2])
+    model = data_from_model1.filter(snippet_topics__in=[snippet_topics_id])
     activetab = 'snippet'
     action = 'Add'
     redirect_url1 = 'snippet'
@@ -361,19 +333,20 @@ def snippet_topics_add_form(request,slug):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url2,args = (slug,)))
-    context = {'form':form,'id':slug,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'model1':model1,'action':action,'username':username}
+    context = {'form':form,'id':slug,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'model1':model1,'action':action}
     return render(request, template,context)
 
 @login_required
 def snippet_topics_edit_form(request,slug):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
-
-    template = 'myapp/dynamic_form.html'
-    e = TblSnippetData.objects.get(slug=slug)
-    topicid = TblSnippetData.objects.get(slug=slug).snippet_topics
-    topics_slug = TblSnippetTopics.objects.get(snippet_topics=topicid).slug
+    data_from_model = TblSnippetData.objects.get(slug=slug)
+    e = data_from_model
+    topicid = data_from_model.snippet_topics
+    data_from_model1 =TblSnippetTopics.objects.get(snippet_topics=topicid)
+    topics_slug = data_from_model1.slug
     activetab = 'snippet'
     action = 'Edit'
     redirect_url1 = 'snippet'
@@ -386,28 +359,27 @@ def snippet_topics_edit_form(request,slug):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url2,args = (topics_slug,)))
-    context = {'form':form,'id':topics_slug,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'activetab':activetab,'model1':topicid,'action':action,'username':username}
+    context = {'form':form,'id':topics_slug,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'activetab':activetab,'model1':topicid,'action':action}
     return render(request, template,context)
 
 def snippet_topics_view(request,slug):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
     activetab = 'snippet'
     redirect_url = slug
-    model = TblSnippetData.objects.filter(slug__in=[slug])
-    topics = TblSnippetData.objects.get(slug=slug).snippet_topics
+    data_from_model = TblSnippetData.objects.all()
+    model = data_from_model.filter(slug__in=[slug])
+    topics = data_from_model.get(slug=slug).snippet_topics
     topics_slug = TblSnippetTopics.objects.get(snippet_topics=topics).slug
-    snippet_title = TblSnippetData.objects.get(slug=slug).snippet_data_subject
-    context = {'model':model,'activetab':activetab,'topics_slug':topics_slug,'snippet_title':snippet_title,'username':username}
+    snippet_title = data_from_model.get(slug=slug).snippet_data_subject
+    context = {'model':model,'activetab':activetab,'topics_slug':topics_slug,'snippet_title':snippet_title,}
     return render(request, template,context)
 
 def learn(request):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
     model = TblLearnTopics.objects.filter(learn_topics_publish__in=[2])
-    context = {'activetab':activetab,'model':model,'username':username}
+    context = {'activetab':activetab,'model':model}
     return render(request, template,context)
 
 
@@ -429,20 +401,20 @@ def learn_add_form(request):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 @login_required
 def learn_edit_form(request,slug):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
-
-    template = 'myapp/dynamic_form.html'
-    model1 = TblLearnTopics.objects.get(slug=slug).learn_topics
-    learn_data_id = TblLearnTopics.objects.get(slug=slug).learn_topics_id
-    e = TblLearnTopics.objects.get(learn_topics_id=learn_data_id)
-    aboutid = TblLearnTopics.objects.get(learn_topics_id=learn_data_id).learn_topics_id
+    data_from_model =TblLearnTopics.objects.all()
+    model1 = data_from_model.get(slug=slug).learn_topics
+    learn_data_id = data_from_model.get(slug=slug).learn_topics_id
+    e = data_from_model.get(learn_topics_id=learn_data_id)
+    aboutid = data_from_model.get(learn_topics_id=learn_data_id).learn_topics_id
     condition = 2
     activetab = 'learn'
     action = 'Edit'
@@ -455,35 +427,38 @@ def learn_edit_form(request,slug):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'id':aboutid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'model1':model1,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 
 
 def learn_topics(request,slug):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
-    model1 = TblLearnTopics.objects.filter(slug__in=[slug])
-    learn_topics_id = TblLearnTopics.objects.get(slug__in=[slug]).learn_topics_id
-    model = TblLearnData.objects.filter(learn_data_publish__in=[2]).filter(learn_topics__in=[learn_topics_id])
+    data_from_model =TblLearnTopics.objects.all()
+    data_from_model1 =TblLearnData.objects.filter(learn_data_publish__in=[2])
+    model1 = data_from_model.filter(slug__in=[slug])
+    learn_topics_id = data_from_model.get(slug__in=[slug]).learn_topics_id
+    model = data_from_model1.filter(learn_topics__in=[learn_topics_id])
     heading = 'About/Add'
     activetab = 'learn'
-    learn_list = TblLearnData.objects.filter(learn_topics__in=[learn_topics_id])
+    learn_list = data_from_model1.filter(learn_topics__in=[learn_topics_id])
     learn_filter = LearnFilter(request.GET, queryset=learn_list)
-    context = {'activetab':activetab,'model':model,'model1':model1,'heading':heading,'filter': learn_filter,'username':username}
+    context = {'activetab':activetab,'model':model,'model1':model1,'heading':heading,'filter': learn_filter}
     return render(request, template,context)
 
 @login_required
 def learn_topics_add_form(request,slug):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
-
-    template = 'myapp/dynamic_form.html'
-    model1 = TblLearnTopics.objects.get(slug__in=[slug]).learn_topics
-    learn_topics_id = TblLearnTopics.objects.get(slug__in=[slug]).learn_topics_id
-    model = TblLearnData.objects.filter(learn_data_publish__in=[2]).filter(learn_topics__in=[learn_topics_id])
+    data_from_model =TblLearnTopics.objects.all()
+    model1 = data_from_model.get(slug__in=[slug]).learn_topics
+    learn_topics_id = data_from_model.get(slug__in=[slug]).learn_topics_id
+    data_from_model1 =TblLearnData.objects.filter(learn_data_publish__in=[2])
+    model =  data_from_model1.filter(learn_topics__in=[learn_topics_id])
+    userid = User.objects.get(username=request.user).id
     activetab = 'learn'
     action = 'Add'
     redirect_url1 = 'learn'
@@ -496,20 +471,22 @@ def learn_topics_add_form(request,slug):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url2,args = (slug,)))
-    context = {'form':form,'id':slug,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'model1':model1,'action':action,'username':username}
+    context = {'form':form,'id':slug,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'model1':model1,'action':action}
     return render(request, template,context)
 
 @login_required
 def learn_topics_edit_form(request,slug):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
 
-    template = 'myapp/dynamic_form.html'
-    e = TblLearnData.objects.get(slug=slug)
-    learnid = TblLearnData.objects.get(slug=slug).learn_topics_id
-    model1 = TblLearnTopics.objects.get(learn_topics_id__in=[learnid]).learn_topics
-    topics_slug = TblLearnTopics.objects.get(learn_topics_id__in=[learnid]).slug
+    data_from_model =TblLearnData.objects.all()
+    e = data_from_model.get(slug=slug)
+    learnid = data_from_model.get(slug=slug).learn_topics_id
+    data_from_model1 =TblLearnTopics.objects.all()
+    model1 = data_from_model1.get(learn_topics_id__in=[learnid]).learn_topics
+    topics_slug = data_from_model1.get(learn_topics_id__in=[learnid]).slug
     activetab = 'learn'
     action = 'Edit'
     redirect_url1 = 'learn'
@@ -522,50 +499,49 @@ def learn_topics_edit_form(request,slug):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url2,args = (topics_slug,)))
-    context = {'form':form,'id':learnid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'model1':model1,'action':action,'username':username}
+    context = {'form':form,'id':learnid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'model1':model1,'action':action}
     return render(request, template,context)
 
 def learn_topics_view(request,slug):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
     activetab = 'learn'
-    model = TblLearnData.objects.filter(slug__in=[slug])
-    topics = TblLearnData.objects.get(slug=slug).learn_topics
-    topics_slug = TblLearnTopics.objects.get(learn_topics=topics).slug
-    learn_title = TblLearnData.objects.get(slug=slug).learn_data
-    context = {'model':model,'activetab':activetab,'topics_slug':topics_slug,'learn_title':learn_title,'username':username}
+    data_from_model =TblLearnData.objects.all()
+    model = data_from_model.filter(slug__in=[slug])
+    topics = data_from_model.get(slug=slug).learn_topics
+    data_from_model1 =TblLearnTopics.objects.get(learn_topics=topics)
+    topics_slug = data_from_model1.slug
+    learn_title = data_from_model.get(slug=slug).learn_data
+    context = {'model':model,'activetab':activetab,'topics_slug':topics_slug,'learn_title':learn_title,}
     return render(request, template,context)
 
 def blog(request):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
     model = TblBlog.objects.filter(blog_publish__in=[2])
-    context = {'activetab':activetab,'model':model,'username':username}
+    context = {'activetab':activetab,'model':model}
     return render(request, template,context)
 
 
 def blog_topics(request,slug):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
-    model = TblBlog.objects.filter(blog_publish__in=[2]).filter(slug__in=[slug])
-    model1 = TblBlog.objects.filter(slug__in=[slug])
+    data_from_model =TblBlog.objects.filter(blog_publish__in=[2]).filter(slug__in=[slug])
+    model =data_from_model
+    model1 = data_from_model
     activetab = 'blog'
     heading = "edit"
-    blog_list = TblBlog.objects.filter(slug__in=[slug])
+    blog_list = data_from_model
     blog_filter = BlogFilter(request.GET, queryset=blog_list)
-    context = {'activetab':activetab,'id':slug,'model':model,'model1':model1,'heading':heading,'filter': blog_filter,'username':username}
+    context = {'activetab':activetab,'id':slug,'model':model,'model1':model1,'heading':heading,'filter': blog_filter}
     return render(request, template,context)
 
 @login_required
 def blog_topics_add_form(request):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
-
-    template = 'myapp/dynamic_form.html'
     activetab = 'blog'
     action = 'Add'
     redirect_url1 = 'blog'
@@ -578,19 +554,20 @@ def blog_topics_add_form(request):
             inst = form.save(commit=True)
             inst.save()
             return HttpResponseRedirect(reverse(redirect_url1))
-    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 @login_required
 def blog_topics_edit_form(request,slug):
+    template = 'myapp/dynamic_form.html'
     userdata = User.objects.all()
     userid = userdata.get(username=request.user).id
     username = userdata.get(username=request.user).username
 
-    template = 'myapp/dynamic_form.html'
-    e = TblBlog.objects.get(slug=slug)
-    blogid = TblBlog.objects.get(slug=slug).blog_id
-    model1 = TblBlog.objects.get(slug__in=[slug]).blog_title
+    data_from_model =TblBlog.objects.get(slug=slug)
+    e = data_from_model
+    blogid = data_from_model.blog_id
+    model1 = data_from_model.blog_title
     activetab = 'blog'
     action = 'Edit'
     redirect_url1 = 'blog'
@@ -604,20 +581,18 @@ def blog_topics_edit_form(request,slug):
             inst.save()
             New_slug = inst.slug
             return HttpResponseRedirect(reverse(redirect_url2,args = (New_slug,)))
-    context = {'form':form,'id':blogid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'action':action,'username':username}
+    context = {'form':form,'id':blogid,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url3':redirect_url3,'model1':model1,'activetab':activetab,'action':action}
     return render(request, template,context)
 
 
 def contact(request):
-    username = request.user
     function_name = get_function_name()
     template, activetab = template_generator(function_name=function_name)
     model = TblQueries.objects.all()
-    context = {'activetab':activetab,'model':model,'username':username}
+    context = {'activetab':activetab,'model':model}
     return render(request, template,context)
 
 def contact_form(request):
-    username = request.user
     template = 'myapp/dynamic_form.html'
     model = TblQueries.objects.all()
     activetab = 'contact'
@@ -632,7 +607,7 @@ def contact_form(request):
             inst = form.save(commit=True)
             inst.save()
             return  HttpResponseRedirect(reverse('thankyou',args = (3,)))
-    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition,'username':username}
+    context = {'form':form,'redirect_url1':redirect_url1,'redirect_url2':redirect_url2,'redirect_url2':redirect_url2,'activetab':activetab,'action':action,'condition':condition}
     return render(request, template,context)
 
 def thankyou(request,ty_id):
@@ -646,37 +621,3 @@ def thankyou(request,ty_id):
         msg = None
     template = 'myapp/thankyou.html'
     return render(request, template, {'msg':msg,'ty_id':ty_id})
-
-def like_it(request):
-    user = request.user
-    if request.method == 'POST':
-        ObjectId = int(request.POST['objectid'])
-        Tip = str(request.POST['contentType'])
-
-        likes = LikeModel.objects.filter(object_id=ObjectId, content_object=Tip) # in here we filtered the particular post with its id
-        if likes: # if the particular post is there
-            if str(user) in str(likes): # then we check the user which is us, in there
-                like_obj = LikeModel.objects.get(user=user,object_id=ObjectId, content_object=Tip) #if we there and we returned this data, this part for saving data, I mean if this data is already created than we dont have to delete and create again, we just change LikeModel.liked true or false state, so that if you create like and it will never delete, it just change liked or like state
-            else:
-                pass
-
-        if Tip == 'UserPost':
-            post_content_type_by = UserPost.objects.all().first()
-
-            if str(user) not in str(likes):
-                like = LikeModel.objects.create(user=user, liked=True, content_object=ContentType.objects.get_for_model(Tip), object_id=ObjectId)
-                like.save() # if data is created then we say 'new'
-                okey = 'new'
-
-            elif str(user) in str(likes) and like_obj.liked:
-                like_obj.liked = False
-                like_obj.save() # if data is already there, then we save it False
-                okey = 'false'
-
-            elif str(user) in str(likes) and like_obj.liked == False:
-                like_obj.liked = True
-                like_obj.save() # if data is already changed to False and we save again to True
-                okey = 'true'
-
-
-    return render(request,'ajaxlike.html',{'likes':likes,'okey':okey})

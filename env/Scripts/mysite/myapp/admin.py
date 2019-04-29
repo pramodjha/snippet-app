@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import TblPublish, TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments, TblLearnDataComments, TblBlogGvp, TblLearnDataGvp, TblSnippetDataGvp, TblHome, TblAbout
+from .models import TblPublish, TblSnippetTopics, TblSnippetData, TblLearnTopics, TblLearnData, TblBlog, TblBlogComments, TblLearnDataComments, TblBlogGvp, TblLearnDataGvp, TblSnippetDataGvp, TblHome, TblAbout,TblLearnLike, TblSnippetLike
 from django.contrib.auth.models import User
 from .form import TblLearnTopicsForm
 
@@ -58,6 +58,8 @@ admin.site.register(TblBlogGvp)
 admin.site.register(TblLearnDataGvp)
 admin.site.register(TblSnippetDataGvp)
 admin.site.register(TblHome)
+admin.site.register(TblLearnLike)
+admin.site.register(TblSnippetLike)
 
 #class TblAboutAdmin(admin.ModelAdmin):
 #    list_display = ('about_id','about_datetime','about_pics','about_content','about_content_description')

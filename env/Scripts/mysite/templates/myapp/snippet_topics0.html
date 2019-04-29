@@ -52,22 +52,12 @@
 					 				<div class="col-xs-12 col-md-12 animate-box" data-animate-effect="fadeInLeft">
 										<span style="font-weight:bold" >Code:</span>  {{data.snippet_data_code|safe}}
 									</div>
-										<form name="add" method="post" action="" enctype="multipart/form-data">
-										{% for data1 in model2 %}
-
-										{% csrf_token %}
-										{% if data1.snippet_data_id == data.snippet_data_id %}
-										<button  type="submit" id="like"  value={{data.slug}}> </button>
-										{% else %}
-										<button  type="submit" id="like"  value={{data.slug}}></button>
-										{% endif %}
-										{% endfor %}
-
+									<form name="add" method="post" action="" enctype="multipart/form-data">
+										<input class="btn btn-primary btn-learn col-xs-6 col-md-6" type="button" id="like"  value="Like" />
 									</form>
 
-
 									{% if perms.myapp.change_tblsnippetdata %}
-													<div class="col-xs-12 col-md-12 animate-box" data-animate-effect="fadeInLeft">
+									<div class="col-xs-12 col-md-12 animate-box" data-animate-effect="fadeInLeft">
 										<div class="col-xs-6 col-md-6"><a class="btn btn-primary btn-learn " href="{% url 'snippettopicseditform' data.slug %}">Edit</a></div>
 									</div>
 									{% endif %}
@@ -94,23 +84,17 @@
 				</div>
 			</div>
 		</div>
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
-
+		<script>
 		$('#like').click(function(){
-			alert("hello")
-			var value = $("#like").val();
-			alert(value) // get the url of the `load_cities` view
+			alert("alert")
 
-		$.ajax({
+					$.ajax({
 								   type: "POST",
-		               url: "{% url 'snippetlike' %}",
-		               data: {'slug': value, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+		               url: "{% url 'snippet' %}",
+		               data: {'slug': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
 		               dataType: "json",
 		               success: function(response) {
-										 		console.log(response.message);
-	                      	alert(response.message);
+		                      alert(response.message);
 		                      alert('Company likes count is now ' + response.likes_count);
 		                },
 		                error: function(rs, e) {

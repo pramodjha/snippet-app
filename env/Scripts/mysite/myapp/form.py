@@ -145,7 +145,7 @@ class TblLearnTopicsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TblLearnTopicsForm, self).__init__(*args, **kwargs)
         self.fields['learn_topics_datetime'].widget = forms.HiddenInput()
-        self.fields['learn_topics_added_by'].widget = forms.HiddenInput()
+    #    self.fields['learn_topics_added_by'].widget = forms.HiddenInput()
         self.fields['learn_topics_icon'].widget.attrs['placeholder'] = 'Icon'
         self.fields['learn_topics_coverpage_img'].widget = forms.HiddenInput()
         self.fields['learn_topics'].widget.attrs['placeholder'] = "Topics"

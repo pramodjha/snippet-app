@@ -3,7 +3,8 @@ import datetime
 from django.contrib.auth.models import User
 from tinymce import HTMLField
 import django
-
+from django.template.defaultfilters import slugify
+import secrets
 
 class TblBlog(models.Model):
     blog_id = models.AutoField(primary_key=True)
@@ -17,6 +18,7 @@ class TblBlog(models.Model):
     blog_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
     blog_keyword = models.CharField(max_length=255, blank=True, null=True)
     blog_pics = models.FileField(upload_to='blog/',blank=True, null=True)
+    slug = models.SlugField(max_length=500, unique=True, blank=True)
 
     class Meta:
         managed = False
@@ -24,6 +26,10 @@ class TblBlog(models.Model):
 
     def __str__(self):
         return str(self.blog_title)
+
+    def save(self, *args, **kwargs):
+        self.slug= slugify(self.blog_title) +"-"+ str(secrets.token_hex(10))
+        super(TblBlog, self).save(*args, **kwargs)
 
 class TblBlogComments(models.Model):
     blog_comments_id = models.AutoField(primary_key=True)
@@ -65,6 +71,7 @@ class TblLearnData(models.Model):
     learn_data_added_by = models.ForeignKey(User, models.DO_NOTHING, db_column='learn_data_added_by')
     learn_data_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
     learn_data_keyword = models.CharField(max_length=255, blank=True, null=True)
+    slug =  models.SlugField(max_length=500, unique=True, blank=True)
 
     class Meta:
         managed = False
@@ -73,6 +80,10 @@ class TblLearnData(models.Model):
     def __str__(self):
         return str(self.learn_topics)
 
+
+    def save(self, *args, **kwargs):
+        self.slug= slugify(self.learn_data) +"-"+ str(secrets.token_hex(10))
+        super(TblLearnData, self).save(*args, **kwargs)
 
 class TblLearnDataComments(models.Model):
     learn_data_comments_id = models.AutoField(primary_key=True)
@@ -111,6 +122,7 @@ class TblLearnTopics(models.Model):
     learn_topics_description =   models.CharField(max_length=255, blank=True, null=True)
     learn_topics_added_by = models.ForeignKey(User, models.DO_NOTHING, db_column='learn_topics_added_by',blank=True)
     learn_topics_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
+    slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -118,6 +130,10 @@ class TblLearnTopics(models.Model):
 
     def __str__(self):
         return str(self.learn_topics)
+
+    def save(self, *args, **kwargs):
+        self.slug= slugify(self.learn_topics) +"-"+ str(secrets.token_hex(10))
+        super(TblLearnTopics, self).save(*args, **kwargs)
 
 class TblPublish(models.Model):
     publish_id = models.AutoField(primary_key=True)
@@ -144,14 +160,20 @@ class TblSnippetData(models.Model):
     snippet_data =   models.CharField(max_length=255, blank=True, null=True)
     snippet_data_subject = models.CharField(max_length=255, blank=True, null=True)
     snippet_data_keyword = models.CharField(max_length=255, blank=True, null=True)
-    snippet_data_code = HTMLField()
+    snippet_data_code = HTMLField(blank=True, null=True)
+    slug =  models.SlugField(max_length=500, unique=True, blank=True)
 
     class Meta:
         managed = False
         db_table = 'tbl_snippet_data'
 
     def __str__(self):
-        return str(self.snippet_topics)
+        return str(self.snippet_data_description)
+
+
+    def save(self, *args, **kwargs):
+        self.slug= slugify(self.snippet_data_subject) +"-"+ str(secrets.token_hex(10))
+        super(TblSnippetData, self).save(*args, **kwargs)
 
 class TblSnippetDataGvp(models.Model):
     snippet_data_gvp_id = models.AutoField(primary_key=True)
@@ -178,6 +200,7 @@ class TblSnippetTopics(models.Model):
     snippet_topics_expire = models.CharField(max_length=100, blank=True, null=True)
     snippet_topics_added_by = models.ForeignKey(User, models.DO_NOTHING, db_column='Snippet_topics_added_by')  # Field name made lowercase.
     snippet_topics_publish = models.ForeignKey(TblPublish, models.DO_NOTHING)
+    slug =  models.SlugField(max_length=500, unique=True, blank=True)
 
     class Meta:
         managed = False
@@ -186,6 +209,10 @@ class TblSnippetTopics(models.Model):
     def __str__(self):
         return str(self.snippet_topics)
 
+
+    def save(self, *args, **kwargs):
+        self.slug= slugify(self.snippet_topics) +"-"+ str(secrets.token_hex(10))
+        super(TblSnippetTopics, self).save(*args, **kwargs)
 
 class TblHome(models.Model):
     home_id = models.AutoField(primary_key=True)
@@ -212,6 +239,7 @@ class TblAbout(models.Model):
     about_content_description = HTMLField()
     about_publish = models.ForeignKey('TblPublish', models.DO_NOTHING)
     about_added_by = models.ForeignKey(User, models.DO_NOTHING, db_column='about_added_by', blank=True, null=True)
+    slug =  models.SlugField(max_length=500, unique=True, blank=True)
 
     class Meta:
         managed = False
@@ -220,6 +248,10 @@ class TblAbout(models.Model):
     def __str__(self):
         return str(self.about_id)
 
+
+    def save(self, *args, **kwargs):
+        self.slug= slugify(self.about_content) +"-"+ str(secrets.token_hex(10))
+        super(TblAbout, self).save(*args, **kwargs)
 
 class TblAboutExpert(models.Model):
     expert_id = models.AutoField(primary_key=True)
@@ -247,3 +279,34 @@ class TblQueries(models.Model):
     class Meta:
         managed = False
         db_table = 'tbl_Queries'
+
+
+class TblLearnLike(models.Model):
+    learn_like_id = models.AutoField(primary_key=True)
+    learn_data = models.ForeignKey(TblLearnData, models.DO_NOTHING)
+    learn_like_datetime = models.DateTimeField(blank=True, null=True)
+    user_liked = models.ForeignKey(User, models.DO_NOTHING, db_column='user_liked', blank=True, null=True)
+    learn_like = models.BooleanField()
+
+    class Meta:
+        managed = False
+        db_table = 'tbl_learn_like'
+
+    @property
+    def Learn_Likes_Count(self):
+        return TblLearnLike.objects.filter(learn_like__in=0).count()
+
+class TblSnippetLike(models.Model):
+    snippet_like_id = models.AutoField(primary_key=True)
+    snippet_data = models.ForeignKey(TblSnippetData, models.DO_NOTHING)
+    snippet_like_datetime = models.DateTimeField(blank=True, null=True)
+    user_liked = models.ForeignKey(User, models.DO_NOTHING, db_column='user_liked', blank=True, null=True)
+    snippet_like = models.BooleanField()
+
+    class Meta:
+        managed = False
+        db_table = 'tbl_snippet_like'
+
+    @property
+    def Learn_Likes_Count(self):
+        return snippet_like.objects.filter(snippet_like__in=0).count()

@@ -26,9 +26,9 @@
 							<i ><img src="/media/{{data.learn_topics_icon}}" class="img-responsive"></i>
 								</div>
 									<div class="colorlib-text">
-										<h3><a href="{% url 'learntopics' data.learn_topics_id %}">{{data.learn_topics}}</a></h3>
+										<h3><a href="{% url 'learntopics' data.slug %}">{{data.learn_topics}}</a></h3>
 										{% if perms.myapp.change_tbllearntopics %}
-										<a href="{% url 'learneditform' data.learn_topics_id %}">Edit</a>
+										<a href="{% url 'learneditform' data.slug %}">Edit</a>
 										{% endif %}
 									</div>
 								</div>
